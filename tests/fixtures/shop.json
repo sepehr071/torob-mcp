@@ -1,0 +1,96 @@
+{
+ "id": 299463,
+ "is_marketplace": false,
+ "enamad_expire_date": "اعتبار تا تاریخ ۱۴۰۷/۰۲/۲۰",
+ "last_updated": "تاریخ بروزرسانی: ۱۲ خرداد",
+ "enamad_level": "نماد ۱ ستاره",
+ "additional_infos": [
+  {
+   "title": "معرفی فروشگاه",
+   "text": "اطلاعاتی توسط فروشگاه ثبت نشده.",
+   "link": ""
+  },
+  {
+   "title": "روش‌های پرداخت",
+   "text": "اطلاعاتی توسط فروشگاه ثبت نشده.",
+   "link": ""
+  },
+  {
+   "title": "روش‌های ارسال کالا",
+   "text": "اطلاعاتی توسط فروشگاه ثبت نشده.",
+   "link": ""
+  },
+  {
+   "title": "شرایط تست و مرجوع شدن کالا",
+   "text": "کلیه گوشی های استوک دارای ده روز مهلت تست همراه با فاکتور رسمی می باشند",
+   "link": ""
+  }
+ ],
+ "date_added": "۱۴۰۴/۰۸/۰۴ (۱۱ ماه پیش)",
+ "block_description": "فعال",
+ "block_partner": false,
+ "payment_info": {
+  "more_info": null,
+  "items": [
+   "پرداخت آنلاین از طریق وبسایت فروشگاه امکان پذیر است."
+  ]
+ },
+ "delivery_info": {
+  "more_info": null,
+  "items": [
+   "امکان تحویل در همان روز برای ارومیه، اشنویه، بوکان، سردشت، سردشت، سردشت، مهاباد، مهاباد، نقده، پیرانشهر با هماهنگی",
+   "روش‌های ارسال: پست، شرکتهای پست خصوصی نظیر تیپاکس"
+  ]
+ },
+ "score_info": [
+  "امتیاز: ۵ از ۵",
+  "حدود ۳۰۰ تا ۵۰۰ سفارش در ۹۰ روز اخیر فعالیت در ترب",
+  "کاربری در ترب پیگیری سفارش ثبت نکرده است."
+ ],
+ "licenses": [
+  {
+   "description_1": "تاریخ اخذ نماد اعتماد: ۱۴۰۴/۰۸/۰۴",
+   "description_2": "تاریخ اعتبار نماد اعتماد: ۱۴۰۷/۰۲/۲۰",
+   "title": "وضعیت نماد: فعال (۱ ستاره)"
+  }
+ ],
+ "active_time": "۱۰ ماه و ۱ هفته",
+ "shop_type": "online-offline",
+ "guarantee_info": {
+  "status": "disabled"
+ },
+ "shop_images": [],
+ "shop_score": 5,
+ "primaryColor": "#ffffff",
+ "accentColor": "#ffffff",
+ "fixed_priority": false,
+ "upvotes": 0,
+ "downvotes": 0,
+ "score_percentile": 0,
+ "city": "مهاباد",
+ "province": "آذربایجان غربی",
+ "drugstore_license_img": null,
+ "ticket_creation_permission": "granted",
+ "last_modified_date": "2026-05-13T18:53:50.226011+03:30",
+ "name": "باوان موبایل",
+ "normalize_name": "باوان موبایل",
+ "is_payment_disabled": false,
+ "block_status": "active",
+ "domain": "bavanmobile.ir",
+ "url_prefix": "https://",
+ "shop_generator": "mixin",
+ "show_unavailable_products": false,
+ "has_payment": "paid",
+ "price_unit_str": "ir_toman",
+ "landing_page_url": null,
+ "enamad_domain": "",
+ "max_member_in_detail": 2,
+ "should_notify_new_price_reports": true,
+ "price_visible": true,
+ "price_visiblity_changes_description": "",
+ "bid_force_deactivation": false,
+ "show_in_buying_assistant_chatbot": true,
+ "show_product_page_as_offline": true,
+ "show_product_page_as_offline_locked": false,
+ "exclude_internet_shop_name_from_shop_search": false
+}

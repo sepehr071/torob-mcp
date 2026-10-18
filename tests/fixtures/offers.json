@@ -1,0 +1,26 @@
+{
+ "_note": "Trimmed from the first live call (full reply was 887 KB for size=1). Only the fields seen are kept.",
+ "results": [
+  {
+   "type": 0,
+   "data": [
+    {
+     "title": "ترندهای لوازم خانگی",
+     "description": "ترندهای اخیر",
+     "shop_id": 4,
+     "more_info_url": "https://api.torob.com/v4/special-offers/details/?prk=4&source=unknown_special_offers1&discover_method=offer&is_off_db_content=True&seed=684281&cat_ids=169&offer_page_id=1&offer_row_id=173849&offer_row_idx=0",
+     "api_url": "https://api.torob.com/v4/special-offers/details/?prk=4&source=unknown_special_offers1&discover_method=offer&is_off_db_content=True&seed=684281&cat_ids=169&offer_page_id=1&offer_row_id=173849&offer_row_idx=0",
+     "image_url": "https://api.torob.com/static/_shared/images/logo.png",
+     "action": "category"
+    }
+   ],
+   "base_products": [
+    {
+     "random_key": "e462957f-e078-4bca-8d53-e72f1acb338c",
+     "name1": "اجاق گاز رومیزی جنرال مدل G406 پنج شعله صفحه استیل ...",
+     "price": "(card, same shape as search results)"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,100 @@
+{
+ "_note": "SYNTHETIC: shape of /v4/internet-shop/base-product/list/ is unverified; cards are real search cards.",
+ "count": 120,
+ "next": "https://api.torob.com/v4/internet-shop/base-product/list/?page=1",
+ "results": [
+  {
+   "badges": [
+    {
+     "text": "کارکرده",
+     "tooltip": null,
+     "badge_type": "stock_status"
+    }
+   ],
+   "discount_info": [],
+   "random_key": "57ea65ae-0798-4cd0-96a7-38d8af180345",
+   "name1": "گوشی اپل دو سیم (استوک) iPhone 13 Pro | حافظه 256 گیگابایت",
+   "name1_max_lines": 3,
+   "name2": "Apple iPhone 13 Pro Dual Sim (Stock) 256 GB",
+   "web_client_absolute_url": "/p/57ea65ae-0798-4cd0-96a7-38d8af180345/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-pro-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-256-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+   "price": 113000000,
+   "price_prefix": "cheapest",
+   "price_text": "از ۱۱۳٫۰۰۰٫۰۰۰ تومان",
+   "price_text_mode": "active",
+   "shop_text": "در ۱۱ فروشگاه",
+   "stock_status": "کارکرده",
+   "delivery_city_name": null,
+   "delivery_city_flag": null,
+   "is_adv": false,
+   "card_type": "default",
+   "estimated_sell": "",
+   "image_count": 7,
+   "direct_cta": null,
+   "has_nearby_shop": false,
+   "has_wiki": true,
+   "is_authentic": false
+  },
+  {
+   "badges": [
+    {
+     "text": "کارکرده",
+     "tooltip": null,
+     "badge_type": "stock_status"
+    }
+   ],
+   "discount_info": [],
+   "random_key": "158600cc-5178-4bcc-87f0-1688ce3e5847",
+   "name1": "گوشی اپل دو سیم (استوک) iPhone 13 | حافظه 128 گیگابایت",
+   "name1_max_lines": 3,
+   "name2": "Apple iPhone 13 Dual Sim (Stock) 128 GB",
+   "web_client_absolute_url": "/p/158600cc-5178-4bcc-87f0-1688ce3e5847/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-128-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+   "price": 76300000,
+   "price_prefix": "cheapest",
+   "price_text": "از ۷۶٫۳۰۰٫۰۰۰ تومان",
+   "price_text_mode": "active",
+   "shop_text": "در ۳۳ فروشگاه",
+   "stock_status": "کارکرده",
+   "delivery_city_name": null,
+   "delivery_city_flag": null,
+   "is_adv": false,
+   "card_type": "default",
+   "estimated_sell": "",
+   "image_count": 3,
+   "direct_cta": null,
+   "has_nearby_shop": false,
+   "has_wiki": true,
+   "is_authentic": false
+  },
+  {
+   "badges": [
+    {
+     "text": "کارکرده",
+     "tooltip": null,
+     "badge_type": "stock_status"
+    }
+   ],
+   "discount_info": [],
+   "random_key": "a3278996-bbb9-44a2-848b-eea58afc0090",
+   "name1": "گوشی آیفون 16 | حافظه 128 گیگابایت دو سیم‌کارت استوک",
+   "name1_max_lines": 3,
+   "name2": "Apple iPhone 16 Dual Sim Stock 128 GB",
+   "web_client_absolute_url": "/p/a3278996-bbb9-44a2-848b-eea58afc0090/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%DB%8C%D9%81%D9%88%D9%86-16-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-128-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9/",
+   "price": 140000000,
+   "price_prefix": "cheapest",
+   "price_text": "از ۱۴۰٫۰۰۰٫۰۰۰ تومان",
+   "price_text_mode": "active",
+   "shop_text": "در ۱۷ فروشگاه",
+   "stock_status": "کارکرده",
+   "delivery_city_name": null,
+   "delivery_city_flag": null,
+   "is_adv": false,
+   "card_type": "default",
+   "estimated_sell": "",
+   "image_count": 7,
+   "direct_cta": null,
+   "has_nearby_shop": false,
+   "has_wiki": true,
+   "is_authentic": false
+  }
+ ]
+}

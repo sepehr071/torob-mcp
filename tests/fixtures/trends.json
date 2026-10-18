@@ -1,0 +1,13 @@
+[
+ {
+  "query": "ایفون 18",
+  "category_id": 94,
+  "partial_info": {
+   "random_key": "a4e79e9c-1a8a-4ac7-8059-939009eb15d8",
+   "name1": "گوشی آیفون 17 پرو مکس | حافظه 256 گیگابایت دو سیم‌کارت نات اکتیو",
+   "name2": "Apple iPhone 17 Pro Max Dual Sim Not Active 256 GB",
+   "more_info_url": "https://api.torob.com/v4/base-product/details/?source=torob_search&discover_method=search&prk=a4e79e9c-1a8a-4ac7-8059-939009eb15d8&rank=0",
+   "_note": "partial_info is a product card with the same shape as search results[]; trimmed"
+  }
+ }
+]

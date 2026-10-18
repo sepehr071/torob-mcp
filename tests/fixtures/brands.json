@@ -1,0 +1,44 @@
+[
+ {
+  "id": 14,
+  "slug": "apple-%D8%A7%D9%BE%D9%84",
+  "name1": "اپل",
+  "name2": "Apple"
+ },
+ {
+  "id": 5,
+  "slug": "samsung-%D8%B3%D8%A7%D9%85%D8%B3%D9%88%D9%86%DA%AF",
+  "name1": "سامسونگ",
+  "name2": "Samsung"
+ },
+ {
+  "id": 102,
+  "slug": "xiaomi-%D8%B4%DB%8C%D8%A7%DB%8C%D9%88%D9%85%DB%8C",
+  "name1": "شیائومی",
+  "name2": "Xiaomi"
+ },
+ {
+  "id": 2,
+  "slug": "nokia-%D9%86%D9%88%DA%A9%DB%8C%D8%A7",
+  "name1": "نوکیا",
+  "name2": "Nokia"
+ },
+ {
+  "id": 10661,
+  "slug": "honor-%D8%A7%D9%86%D8%B1",
+  "name1": "آنر",
+  "name2": "Honor"
+ },
+ {
+  "id": 3,
+  "slug": "lg-ال-جی",
+  "name1": "ال‌جی",
+  "name2": "LG"
+ },
+ {
+  "id": 7,
+  "slug": "sony-سونی",
+  "name1": "سونی",
+  "name2": "Sony"
+ }
+]

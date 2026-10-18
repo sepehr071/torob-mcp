@@ -1,0 +1,723 @@
+{
+ "badges": [
+  {
+   "text": "کارکرده",
+   "tooltip": null,
+   "badge_type": "stock_status"
+  }
+ ],
+ "discount_info": [],
+ "random_key": "57ea65ae-0798-4cd0-96a7-38d8af180345",
+ "name1": "گوشی اپل دو سیم (استوک) iPhone 13 Pro | حافظه 256 گیگابایت",
+ "name1_max_lines": 3,
+ "name2": "Apple iPhone 13 Pro Dual Sim (Stock) 256 GB",
+ "web_client_absolute_url": "/p/57ea65ae-0798-4cd0-96a7-38d8af180345/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-pro-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-256-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+ "price": 113000000,
+ "price_prefix": "cheapest",
+ "price_text": "از ۱۱۳٫۰۰۰٫۰۰۰ تومان",
+ "price_text_mode": "active",
+ "shop_text": "در ۱۱ فروشگاه",
+ "stock_status": "کارکرده",
+ "delivery_city_name": null,
+ "delivery_city_flag": null,
+ "is_adv": false,
+ "card_type": "default",
+ "estimated_sell": "",
+ "image_count": 7,
+ "direct_cta": null,
+ "has_nearby_shop": false,
+ "has_wiki": true,
+ "is_authentic": false,
+ "seo_title": "",
+ "seo_description": "گوشی اپل iPhone 13 Pro با حافظه 256 گیگابایت، NFC، RAM 6 گیگابایت، وزن 204 گرم، باتری 3095 mAh، شبکه 5G، CPU A15 Bionic، دوربین اصلی 12 مگاپیکسل",
+ "products_info": {
+  "ordering": 2,
+  "title": "فروشنده‌ها",
+  "tab_title": "خرید اینترنتی",
+  "result": [
+   {
+    "availability": true,
+    "name1": "گوشی آیفون 13 پرو 256 گیک رام 6 دو سیم ch - مشکی ا Iphone 13 pro 256/6",
+    "name2": "بدون رجیستر 10 روز مهلت تست باتری تعویض",
+    "shop_name": "باوان موبایل",
+    "shop_name2": "مهاباد",
+    "shop_id": 299463,
+    "has_public_torob_profile": true,
+    "prk": "6bafc86b-94b8-43eb-a542-065855df8379",
+    "problem_report_type": "online",
+    "is_filtered_by_city": false,
+    "is_filtered_by_warranty": false,
+    "is_filtered_by_bnpl": false,
+    "is_filtered_by_torobpay": false,
+    "shop_score_percentile": 0,
+    "shop_votes_count": 0,
+    "button_text": "خرید اینترنتی",
+    "price": 113000000,
+    "price_text": "۱۱۳٫۰۰۰٫۰۰۰ تومان",
+    "price_text_striked": "",
+    "price_text_mode": "active",
+    "is_price_unreliable": false,
+    "price_string": "۱۱۳٫۰۰۰٫۰۰۰ تومان",
+    "shop_score": 5,
+    "show_report_button": true,
+    "more_info": {
+     "payment_on_delivery": null,
+     "free_shipping": null,
+     "same_day_delivery": "امکان تحویل در همان روز برای ارومیه، اشنویه، بوکان، سردشت، سردشت، سردشت، مهاباد، مهاباد، نقده، پیرانشهر با هماهنگی",
+     "shipping_types": [
+      "شرکتهای پست خصوصی نظیر تیپاکس",
+      "پست"
+     ],
+     "heavy_items": null,
+     "same_day_free_shipping": null,
+     "selected_shipping_info": null,
+     "delivery_info": null
+    },
+    "score_info": {
+     "score": 5.0,
+     "score_text": "★۵ (۱۰ ماه در ترب)",
+     "score_color": "#0b5124",
+     "score_background_color": "#daf2d5",
+     "complaints_info": {
+      "title": "امتیاز فروشگاه ★۵ (۱۰ ماه در ترب)",
+      "summary": [
+       "حدود ۳۰۰ تا ۵۰۰ سفارش در ۹۰ روز اخیر فعالیت در ترب",
+       "کاربری در ترب پیگیری سفارش ثبت نکرده است."
+      ]
+     }
+    },
+    "is_adv": false,
+    "last_price_change_date": "۶ ساعت پیش",
+    "show_purchase_warning": false,
+    "installment": null,
+    "guarantee_info": {
+     "status": "disabled"
+    },
+    "badges": [],
+    "purchasing_terms": null,
+    "postage_fee": ""
+   },
+   {
+    "availability": true,
+    "name1": "گوشی آیفون 13 پرو 256 گیک رام 6 دو سیم ch - بدون رجیستر ا Iphone 13 pro 256/6",
+    "name2": "بدون رجیستر 10 روز مهلت تست باتری تعویض",
+    "shop_name": "باوان موبایل",
+    "shop_name2": "مهاباد",
+    "shop_id": 299463,
+    "has_public_torob_profile": true,
+    "prk": "8de687f3-34a8-425f-a614-fc0930e93832",
+    "problem_report_type": "online",
+    "is_filtered_by_city": false,
+    "is_filtered_by_warranty": false,
+    "is_filtered_by_bnpl": false,
+    "is_filtered_by_torobpay": false,
+    "shop_score_percentile": 0,
+    "shop_votes_count": 0,
+    "button_text": "خرید اینترنتی",
+    "price": 113000000,
+    "price_text": "۱۱۳٫۰۰۰٫۰۰۰ تومان",
+    "price_text_striked": "",
+    "price_text_mode": "active",
+    "is_price_unreliable": false,
+    "price_string": "۱۱۳٫۰۰۰٫۰۰۰ تومان",
+    "shop_score": 5,
+    "show_report_button": true,
+    "more_info": {
+     "payment_on_delivery": null,
+     "free_shipping": null,
+     "same_day_delivery": "امکان تحویل در همان روز برای ارومیه، اشنویه، بوکان، سردشت، سردشت، سردشت، مهاباد، مهاباد، نقده، پیرانشهر با هماهنگی",
+     "shipping_types": [
+      "شرکتهای پست خصوصی نظیر تیپاکس",
+      "پست"
+     ],
+     "heavy_items": null,
+     "same_day_free_shipping": null,
+     "selected_shipping_info": null,
+     "delivery_info": null
+    },
+    "score_info": {
+     "score": 5.0,
+     "score_text": "★۵ (۱۰ ماه در ترب)",
+     "score_color": "#0b5124",
+     "score_background_color": "#daf2d5",
+     "complaints_info": {
+      "title": "امتیاز فروشگاه ★۵ (۱۰ ماه در ترب)",
+      "summary": [
+       "حدود ۳۰۰ تا ۵۰۰ سفارش در ۹۰ روز اخیر فعالیت در ترب",
+       "کاربری در ترب پیگیری سفارش ثبت نکرده است."
+      ]
+     }
+    },
+    "is_adv": false,
+    "last_price_change_date": "۹ روز پیش",
+    "show_purchase_warning": false,
+    "installment": null,
+    "guarantee_info": {
+     "status": "disabled"
+    },
+    "badges": [],
+    "purchasing_terms": null,
+    "postage_fee": ""
+   },
+   {
+    "availability": true,
+    "name1": "آیفون 13 پرو IPHONE 13 Pro CH/A دوسیم حافظه 256 گیگابایت | پک اصلی | فقط اکتیو شده در حد اکبند",
+    "name2": "7 روز مهلت تست سخت افزاری",
+    "shop_name": "لاکچری لپ تاپ",
+    "shop_name2": "سبزوار",
+    "shop_id": 9500,
+    "has_public_torob_profile": true,
+    "prk": "253ba470-f878-4fc5-a142-bb1725fda59c",
+    "problem_report_type": "online",
+    "is_filtered_by_city": false,
+    "is_filtered_by_warranty": false,
+    "is_filtered_by_bnpl": false,
+    "is_filtered_by_torobpay": false,
+    "shop_score_percentile": 0,
+    "shop_votes_count": 0,
+    "button_text": "خرید اینترنتی",
+    "price": 117810000,
+    "price_text": "۱۱۷٫۸۱۰٫۰۰۰ تومان",
+    "price_text_striked": "",
+    "price_text_mode": "active",
+    "is_price_unreliable": false,
+    "price_string": "۱۱۷٫۸۱۰٫۰۰۰ تومان",
+    "shop_score": 5,
+    "show_report_button": true,
+    "more_info": {
+     "payment_on_delivery": null,
+     "free_shipping": null,
+     "same_day_delivery": "امکان تحویل در همان روز برای تهران، سبزوار، مشهد با هماهنگی",
+     "shipping_types": [
+      "شرکتهای پست خصوصی نظیر تیپاکس",
+      "پست",
+      "پیک"
+     ],
+     "heavy_items": null,
+     "same_day_free_shipping": null,
+     "selected_shipping_info": null,
+     "delivery_info": "ارسال در سریعترین زمان ممکن فقط با تیپاکس"
+    },
+    "score_info": {
+     "score": 5.0,
+     "score_text": "★۵ (۳ سال در ترب)",
+     "score_color": "#0b5124",
+     "score_background_color": "#daf2d5",
+     "complaints_info": {
+      "title": "امتیاز فروشگاه ★۵ (۳ سال در ترب)",
+      "summary": [
+       "حدود ۱۰۰ تا ۲۰۰ سفارش در ۹۰ روز اخیر فعالیت در ترب",
+       "کاربری در ترب پیگیری سفارش ثبت نکرده است."
+      ]
+     }
+    },
+    "is_adv": false,
+    "last_price_change_date": "۳ ساعت پیش",
+    "show_purchase_warning": false,
+    "installment": null,
+    "guarantee_info": {
+     "status": "disabled"
+    },
+    "badges": [],
+    "purchasing_terms": null,
+    "postage_fee": ""
+   }
+  ],
+  "count": 69,
+  "is_visible": true
+ },
+ "products_in_store_info": {
+  "ordering": 1,
+  "title": "فروشگاه‌های حضوری",
+  "tab_title": "خرید حضوری",
+  "result": [
+   {
+    "prk": "faca2ec0-2745-4b7a-a2a4-d95fb0f38cc9",
+    "shop_id": 383332,
+    "name1": "شهر جدید، خیابان ابن...",
+    "name2": "تست و تحویل در حضور مشتری ا بدون ریجستر - ال سی دی تعویض",
+    "shop_name": "لارفون",
+    "shop_badge": null,
+    "shop_name2": "لار",
+    "distance": "",
+    "sorting_badge": [],
+    "working_hours": {
+     "type": "schedule",
+     "title": {
+      "status": "بسته",
+      "text": "تا ۰۹:۰۰ فردا"
+     },
+     "schedule": [
+      {
+       "title": "شنبه",
+       "text": "فروشگاه تعطیل است",
+       "is_today": false
+      },
+      {
+       "title": "یکشنبه",
+       "text": "۰۹:۰۰ - ۱۳:۰۰",
+       "is_today": false
+      },
+      {
+       "title": "دوشنبه",
+       "text": "۰۹:۰۰ - ۱۳:۰۰",
+       "is_today": false
+      },
+      {
+       "title": "سه‌شنبه",
+       "text": "۰۹:۰۰ - ۱۳:۰۰",
+       "is_today": false
+      },
+      {
+       "title": "چهارشنبه",
+       "text": "۰۹:۰۰ - ۱۳:۰۰",
+       "is_today": false
+      },
+      {
+       "title": "پنج‌شنبه (امروز)",
+       "text": "۰۹:۰۰ - ۱۳:۰۰",
+       "is_today": true
+      },
+      {
+       "title": "جمعه",
+       "text": "۰۹:۰۰ - ۱۳:۰۰",
+       "is_today": false
+      }
+     ],
+     "working_hours_msg": "ساعت کاری این فروشگاه از ۰۹:۰۰ تا ۱۳:۰۰ است. می‌خواهید با فروشگاه تماس بگیرید؟"
+    },
+    "is_open": false,
+    "price": 55000000,
+    "price_string": "۵۵٫۰۰۰٫۰۰۰ تومان",
+    "is_price_unreliable": false,
+    "button_text": "اطلاعات تماس",
+    "problem_report_type": "offline",
+    "last_price_change_date": "۴ ماه و ۲۹ روز پیش",
+    "badges": [],
+    "purchasing_terms": null,
+    "shop_more_info": null,
+    "supports_fast_delivery": false,
+    "is_filtered_by_city": false,
+    "is_filtered_by_bnpl": false,
+    "score_info": {
+     "score": 5,
+     "score_text": "خرید حضوری",
+     "score_color": "#333333",
+     "score_background_color": "#ecedef",
+     "complaints_info": {
+      "title": "خرید حضوری",
+      "summary": [
+       "توصیه ترب خرید حضوری از این فروشگاه است."
+      ]
+     }
+    },
+    "installment": null
+   },
+   {
+    "prk": "e6f975f6-1edc-4dc8-9f4c-8a66aef00dae",
+    "shop_id": 78181,
+    "name1": "کمربندی، انتهای خیابان وحدت...",
+    "name2": "موبایل اپل آیفون ۱۳ پرو با ظرفیت ۲۵۶ گیگابایت و دو سیم کارت. دستگاه در حد صفر و آک و رجیستر شده است.",
+    "shop_name": "مستر موبایل سردشت",
+    "shop_badge": null,
+    "shop_name2": "سردشت",
+    "distance": "",
+    "sorting_badge": [],
+    "working_hours": null,
+    "is_open": false,
+    "price": 55500000,
+    "price_string": "۵۵٫۵۰۰٫۰۰۰ تومان",
+    "is_price_unreliable": false,
+    "button_text": "اطلاعات تماس",
+    "problem_report_type": "offline",
+    "last_price_change_date": "۱۸ روز پیش",
+    "badges": [],
+    "purchasing_terms": null,
+    "shop_more_info": null,
+    "supports_fast_delivery": false,
+    "is_filtered_by_city": false,
+    "is_filtered_by_bnpl": false,
+    "score_info": {
+     "score": 5,
+     "score_text": "خرید حضوری",
+     "score_color": "#333333",
+     "score_background_color": "#ecedef",
+     "complaints_info": {
+      "title": "خرید حضوری",
+      "summary": [
+       "توصیه ترب خرید حضوری از این فروشگاه است."
+      ]
+     }
+    },
+    "installment": null
+   }
+  ],
+  "count": 22,
+  "is_visible": true
+ },
+ "products_instore_info": {
+  "ordering": 1,
+  "title": "فروشندگان سطح شهر",
+  "result": [],
+  "is_visible": false
+ },
+ "seller_title": "فروشنده‌ها",
+ "filters": {
+  "items": [
+   {
+    "title": "دارای ضمانت ترب",
+    "type": "button",
+    "action": "is_filtered_by_warranty",
+    "price_str": "از ۱۶۰٫۳۹۰٫۰۰۰ تومان",
+    "order": [
+     "products_info",
+     "products_in_store_info"
+    ],
+    "online_shop_display_count": 3,
+    "offline_shop_display_count": 0,
+    "target_shop_type": "online"
+   },
+   {
+    "title": "خرید قسطی",
+    "type": "button",
+    "action": "is_filtered_by_bnpl",
+    "price_str": "از ۱۶۰٫۳۹۰٫۰۰۰ تومان",
+    "order": [
+     "products_info",
+     "products_in_store_info"
+    ],
+    "online_shop_display_count": 2,
+    "offline_shop_display_count": 0,
+    "is_active": false,
+    "target_shop_type": "online"
+   },
+   {
+    "title": "انتخاب شهر من",
+    "type": "city_select_empty",
+    "action": "is_filtered_by_city",
+    "price_str": "",
+    "is_active": false,
+    "target_shop_type": "all"
+   }
+  ],
+  "url": "<redacted-tracking-url>",
+  "interaction_log_url": "<redacted-tracking-url>"
+ },
+ "min_price": 113000000,
+ "max_price": 212056000,
+ "variants": [
+  {
+   "title": "حافظه و رم",
+   "items": [
+    {
+     "badges": [
+      {
+       "text": "کارکرده",
+       "tooltip": null,
+       "badge_type": "stock_status"
+      }
+     ],
+     "discount_info": [],
+     "random_key": "57ea65ae-0798-4cd0-96a7-38d8af180345",
+     "name1": "گوشی اپل دو سیم (استوک) iPhone 13 Pro | حافظه 256 گیگابایت",
+     "name1_max_lines": 3,
+     "name2": "Apple iPhone 13 Pro Dual Sim (Stock) 256 GB",
+     "web_client_absolute_url": "/p/57ea65ae-0798-4cd0-96a7-38d8af180345/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-pro-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-256-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+     "price": 113000000,
+     "price_prefix": "cheapest",
+     "price_text": "از ۱۱۳٫۰۰۰٫۰۰۰ تومان",
+     "price_text_mode": "active",
+     "shop_text": "در ۱۱ فروشگاه",
+     "stock_status": "کارکرده",
+     "delivery_city_name": null,
+     "delivery_city_flag": null,
+     "is_adv": false,
+     "card_type": "default",
+     "estimated_sell": "",
+     "image_count": 7,
+     "direct_cta": null,
+     "has_nearby_shop": false,
+     "has_wiki": true,
+     "is_authentic": false,
+     "selected": true,
+     "title": "256 GB - 6 GB",
+     "slug_name": "گوشی-اپل-دو-سیم-استوک-iphone-13-pro-حافظه-256-گیگابایت",
+     "show_image": false,
+     "attributes": {
+      "ram": "6 gb",
+      "year": "2021",
+      "model": "iphone 13 pro",
+      "battery": "3095 mah",
+      "network": "5 g",
+      "storage": "256 gb",
+      "sim_card": "2 سیم کارت",
+      "main_camera": "12 mp",
+      "originality": "اصل",
+      "rom_country": "singapore",
+      "screen_size": "6.1 inch",
+      "stock_status": "stock",
+      "active_status": "active",
+      "selfie_camera": "12 mp",
+      "register_status": "registered",
+      "operating_system": "ios 15"
+     }
+    },
+    {
+     "badges": [
+      {
+       "text": "کارکرده",
+       "tooltip": null,
+       "badge_type": "stock_status"
+      }
+     ],
+     "discount_info": [],
+     "random_key": "8369a2a5-212a-42ba-8fdf-91d338712a91",
+     "name1": "گوشی اپل (استوک) iPhone 13 Pro | حافظه 1 ترابایت",
+     "name1_max_lines": 3,
+     "name2": "Apple IPhone 13 Pro (Stock) 1T",
+     "web_client_absolute_url": "/p/8369a2a5-212a-42ba-8fdf-91d338712a91/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-pro-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-1-%D8%AA%D8%B1%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+     "price": 0,
+     "price_prefix": "cheapest",
+     "price_text": "ناموجود",
+     "price_text_mode": "disabled",
+     "shop_text": "در ۷ فروشگاه",
+     "stock_status": "کارکرده",
+     "delivery_city_name": null,
+     "delivery_city_flag": null,
+     "is_adv": false,
+     "card_type": "default",
+     "estimated_sell": "",
+     "image_count": 7,
+     "direct_cta": null,
+     "has_nearby_shop": false,
+     "has_wiki": false,
+     "is_authentic": false,
+     "selected": false,
+     "title": "1 TB - 6 GB",
+     "slug_name": "گوشی-اپل-استوک-iphone-13-pro-حافظه-1-ترابایت",
+     "show_image": false,
+     "attributes": {
+      "ram": "6 gb",
+      "year": "2021",
+      "model": "iphone 13 pro",
+      "battery": "3095 mah",
+      "network": "5 g",
+      "storage": "1 tb",
+      "sim_card": "تک سیم کارت",
+      "main_camera": "12 mp",
+      "originality": "اصل",
+      "rom_country": "united states",
+      "screen_size": "6.1 inch",
+      "stock_status": "stock",
+      "active_status": "active",
+      "selfie_camera": "12 mp",
+      "register_status": "registered",
+      "operating_system": "ios 15"
+     }
+    },
+    {
+     "badges": [
+      {
+       "text": "کارکرده",
+       "tooltip": null,
+       "badge_type": "stock_status"
+      }
+     ],
+     "discount_info": [],
+     "random_key": "c16988cd-4750-40dc-a5bc-02dbd2392b75",
+     "name1": "گوشی موبایل اپل مدل iPhone 13 Pro JA تک سیم‌ کارت ظرفیت 512 گیگابایت و 6 گیگابایت رم - در حد اکتیو باتری 100(کارتن لیبل -مدل نامبر M)",
+     "name1_max_lines": 3,
+     "name2": "",
+     "web_client_absolute_url": "/p/c16988cd-4750-40dc-a5bc-02dbd2392b75/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%A7%D9%BE%D9%84-%D9%85%D8%AF%D9%84-iphone-13-pro-ja-%D8%AA%DA%A9-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-6-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D8%B1%D9%85-%D8%AF%D8%B1-%D8%AD%D8%AF-%D8%A7%DA%A9%D8%AA%DB%8C%D9%88-%D8%A8%D8%A7%D8%AA%D8%B1%DB%8C-100-%DA%A9%D8%A7%D8%B1%D8%AA%D9%86-%D9%84%DB%8C%D8%A8%D9%84-%D9%85%D8%AF%D9%84-%D9%86%D8%A7%D9%85%D8%A8%D8%B1-m/",
+     "price": 0,
+     "price_prefix": "cheapest",
+     "price_text": "ناموجود",
+     "price_text_mode": "disabled",
+     "shop_text": "",
+     "stock_status": "کارکرده",
+     "delivery_city_name": null,
+     "delivery_city_flag": null,
+     "is_adv": false,
+     "card_type": "default",
+     "estimated_sell": "",
+     "image_count": 6,
+     "direct_cta": null,
+     "has_nearby_shop": false,
+     "has_wiki": false,
+     "is_authentic": false,
+     "selected": false,
+     "title": "512 GB - 6 GB",
+     "slug_name": "گوشی-موبایل-اپل-مدل-iphone-13-pro-ja-تک-سیم-کارت-ظرفیت-512-گیگابایت-و-6-گیگابایت-رم-در-حد-اکتیو-باتری-100-کارتن-لیبل-مدل-نامبر-m",
+     "show_image": false,
+     "attributes": {
+      "ram": "6 gb",
+      "year": "2021",
+      "model": "iphone 13 pro",
+      "battery": "3095 mah",
+      "network": "5 g",
+      "storage": "512 gb",
+      "sim_card": "تک سیم کارت",
+      "main_camera": "12 mp",
+      "originality": "",
+      "rom_country": "",
+      "screen_size": "8 inch",
+      "stock_status": "stock",
+      "active_status": "active",
+      "selfie_camera": "12 mp",
+      "register_status": "",
+      "operating_system": "ios 15"
+     }
+    }
+   ]
+  }
+ ],
+ "contents": [],
+ "breadcrumbs": [
+  {
+   "id": 0,
+   "title": "ترب",
+   "url": "/",
+   "cat_id": 0,
+   "brand_id": null
+  },
+  {
+   "id": 175,
+   "title": "موبایل و کالای دیجیتال",
+   "url": "/browse/175/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D9%88-%DA%A9%D8%A7%D9%84%D8%A7%DB%8C-%D8%AF%DB%8C%D8%AC%DB%8C%D8%AA%D8%A7%D9%84/",
+   "cat_id": 175,
+   "brand_id": null
+  },
+  {
+   "id": 94,
+   "title": "گوشی موبایل",
+   "url": "/browse/94/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-mobile/",
+   "cat_id": 94,
+   "brand_id": null
+  },
+  {
+   "id": 94,
+   "title": "اپل (Apple)",
+   "url": "/browse/94/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-mobile/b/14/apple-%D8%A7%D9%BE%D9%84/",
+   "cat_id": 94,
+   "brand_id": 14
+  }
+ ],
+ "structural_specs": {
+  "source": "",
+  "headers": [
+   {
+    "header": "مشخصات کلی",
+    "specs": {
+     "نام ثانویه محصول": "Apple iPhone 13 Pro Dual SIM 256GB, 6GB Ram Mobile Phone",
+     "نام کوتاه محصول": "iPhone 13 Pro",
+     "تراشه پردازنده": "Apple A15 Bionic (5 nm)",
+     "تعداد هسته پردازنده": "شش هسته"
+    }
+   }
+  ]
+ },
+ "key_specs": [
+  {
+   "header": "مشخصات کلیدی",
+   "items": [
+    {
+     "key": "حافظه داخلی",
+     "value": [
+      "256 گیگابایت"
+     ]
+    },
+    {
+     "key": "حافظه RAM",
+     "value": [
+      "6 گیگابایت"
+     ]
+    },
+    {
+     "key": "اندازه صفحه نمایش",
+     "value": [
+      "۶.۱ اینچ"
+     ]
+    },
+    {
+     "key": "کیفیت دوربین اصلی",
+     "value": [
+      "۱۲ مگاپیکسل"
+     ]
+    },
+    {
+     "key": "کیفیت دوربین جلو",
+     "value": [
+      "۱۲ مگاپیکسل"
+     ]
+    },
+    {
+     "key": "ظرفیت باتری",
+     "value": [
+      "۳۰۹۵ میلی‌آمپرساعت"
+     ]
+    },
+    {
+     "key": "شبکه‌های ارتباطی",
+     "value": [
+      "5G"
+     ]
+    },
+    {
+     "key": "سیستم عامل",
+     "value": [
+      "ios ۱۵"
+     ]
+    },
+    {
+     "key": "سیم کارت",
+     "value": [
+      "2 سیم کارت"
+     ]
+    },
+    {
+     "key": "کشور ROM",
+     "value": [
+      "سنگاپور"
+     ]
+    },
+    {
+     "key": "وضعیت رجیستر",
+     "value": [
+      "رجیستر شده"
+     ]
+    },
+    {
+     "key": "وضعیت فعال بودن",
+     "value": [
+      "اکتیو"
+     ]
+    },
+    {
+     "key": "سال تولید",
+     "value": [
+      "2021"
+     ]
+    }
+   ]
+  }
+ ],
+ "slug_name": "گوشی-اپل-دو-سیم-استوک-iphone-13-pro-حافظه-256-گیگابایت",
+ "is_confirmed": true,
+ "is_accessible": true,
+ "availability": true,
+ "torob_category": 94,
+ "no_index": false,
+ "buy_box_price_text": "از ۱۱۳٫۰۰۰٫۰۰۰ تومان تا ۲۱۲٫۰۵۶٫۰۰۰ تومان",
+ "buy_box_button_text": "خرید از ارزان‌ترین فروشنده",
+ "buy_box_show_purchase_warning": false,
+ "new_buy_box_button_text": "خرید از باوان موبایل",
+ "new_buy_box_button_text2": "۱۱۳٫۰۰۰٫۰۰۰ تومان",
+ "new_buy_box_button_badge": "ارزان‌ترین",
+ "new_buy_box_button_badge_style": "plain",
+ "new_buy_box_button_scrol_to_prk": "6bafc86b-94b8-43eb-a542-065855df8379",
+ "new_buy_box_source_prk": "6bafc86b-94b8-43eb-a542-065855df8379",
+ "new_buy_box_source_type": "online",
+ "new_buy_box_chevron_text": "۱۰ فروشنده دیگر",
+ "new_buy_box_show_purchase_warning": false,
+ "new_buy_box_contact_url": null
+}

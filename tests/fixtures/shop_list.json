@@ -1,0 +1,23 @@
+{
+ "_note": "SYNTHETIC: shape of /v4/internet-shop/list/ is unverified (endpoint known from the site bundle); built from the shop details fixture.",
+ "count": 2,
+ "next": null,
+ "results": [
+  {
+   "id": 299463,
+   "name": "باوان موبایل",
+   "city": "مهاباد",
+   "province": "آذربایجان غربی",
+   "domain": "bavanmobile.ir",
+   "shop_score": 5
+  },
+  {
+   "id": 383332,
+   "name": "لارفون",
+   "city": "لار",
+   "province": "فارس",
+   "domain": "larphone.ir",
+   "shop_score": 4.5
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sepehr071/torob-mcp",
+  "title": "Torob",
+  "description": "Unofficial read-only Torob: compare Iranian shop prices, price history, deal checks, baskets, installments.",
+  "repository": {
+    "url": "https://github.com/sepehr071/torob-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/sepehr071/torob-mcp",
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "torob-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TOROB_MCP_PROXY",
+          "description": "Optional HTTP proxy URL for requests to torob.com, or a comma-separated list used one at a time (the next one takes over when one is blocked or unreachable); system proxy settings are ignored. Torob blocks many foreign and cloud IPs, so an Iranian exit may be needed.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

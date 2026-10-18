@@ -1,0 +1,125 @@
+{
+ "results": [
+  {
+   "prk": "faca2ec0-2745-4b7a-a2a4-d95fb0f38cc9",
+   "shop_id": 383332,
+   "name1": "شهر جدید، خیابان ابن...",
+   "name2": "تست و تحویل در حضور مشتری ا بدون ریجستر - ال سی دی تعویض",
+   "shop_name": "لارفون",
+   "shop_badge": null,
+   "shop_name2": "لار",
+   "distance": "",
+   "sorting_badge": [],
+   "working_hours": {
+    "type": "schedule",
+    "title": {
+     "status": "بسته",
+     "text": "تا ۰۹:۰۰ فردا"
+    },
+    "schedule": [
+     {
+      "title": "شنبه",
+      "text": "فروشگاه تعطیل است",
+      "is_today": false
+     },
+     {
+      "title": "یکشنبه",
+      "text": "۰۹:۰۰ - ۱۳:۰۰",
+      "is_today": false
+     },
+     {
+      "title": "دوشنبه",
+      "text": "۰۹:۰۰ - ۱۳:۰۰",
+      "is_today": false
+     },
+     {
+      "title": "سه‌شنبه",
+      "text": "۰۹:۰۰ - ۱۳:۰۰",
+      "is_today": false
+     },
+     {
+      "title": "چهارشنبه",
+      "text": "۰۹:۰۰ - ۱۳:۰۰",
+      "is_today": false
+     },
+     {
+      "title": "پنج‌شنبه (امروز)",
+      "text": "۰۹:۰۰ - ۱۳:۰۰",
+      "is_today": true
+     },
+     {
+      "title": "جمعه",
+      "text": "۰۹:۰۰ - ۱۳:۰۰",
+      "is_today": false
+     }
+    ],
+    "working_hours_msg": "ساعت کاری این فروشگاه از ۰۹:۰۰ تا ۱۳:۰۰ است. می‌خواهید با فروشگاه تماس بگیرید؟"
+   },
+   "is_open": false,
+   "price": 55000000,
+   "price_string": "۵۵٫۰۰۰٫۰۰۰ تومان",
+   "is_price_unreliable": false,
+   "button_text": "اطلاعات تماس",
+   "problem_report_type": "offline",
+   "last_price_change_date": "۴ ماه و ۲۹ روز پیش",
+   "badges": [],
+   "purchasing_terms": null,
+   "shop_more_info": null,
+   "supports_fast_delivery": false,
+   "is_filtered_by_city": false,
+   "is_filtered_by_bnpl": false,
+   "score_info": {
+    "score": 5,
+    "score_text": "خرید حضوری",
+    "score_color": "#333333",
+    "score_background_color": "#ecedef",
+    "complaints_info": {
+     "title": "خرید حضوری",
+     "summary": [
+      "توصیه ترب خرید حضوری از این فروشگاه است."
+     ]
+    }
+   },
+   "installment": null
+  },
+  {
+   "prk": "e6f975f6-1edc-4dc8-9f4c-8a66aef00dae",
+   "shop_id": 78181,
+   "name1": "کمربندی، انتهای خیابان وحدت...",
+   "name2": "موبایل اپل آیفون ۱۳ پرو با ظرفیت ۲۵۶ گیگابایت و دو سیم کارت. دستگاه در حد صفر و آک و رجیستر شده است.",
+   "shop_name": "مستر موبایل سردشت",
+   "shop_badge": null,
+   "shop_name2": "سردشت",
+   "distance": "",
+   "sorting_badge": [],
+   "working_hours": null,
+   "is_open": false,
+   "price": 55500000,
+   "price_string": "۵۵٫۵۰۰٫۰۰۰ تومان",
+   "is_price_unreliable": false,
+   "button_text": "اطلاعات تماس",
+   "problem_report_type": "offline",
+   "last_price_change_date": "۱۸ روز پیش",
+   "badges": [],
+   "purchasing_terms": null,
+   "shop_more_info": null,
+   "supports_fast_delivery": false,
+   "is_filtered_by_city": false,
+   "is_filtered_by_bnpl": false,
+   "score_info": {
+    "score": 5,
+    "score_text": "خرید حضوری",
+    "score_color": "#333333",
+    "score_background_color": "#ecedef",
+    "complaints_info": {
+     "title": "خرید حضوری",
+     "summary": [
+      "توصیه ترب خرید حضوری از این فروشگاه است."
+     ]
+    }
+   },
+   "installment": null
+  }
+ ],
+ "count": 22
+}

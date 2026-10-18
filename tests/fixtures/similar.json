@@ -1,0 +1,92 @@
+{
+ "results": [
+  {
+   "badges": [],
+   "discount_info": [],
+   "random_key": "935d1506-022e-43b8-b94e-b2543158bcd5",
+   "name1": "گوشی آیفون 16 | حافظه 128 گیگابایت دو سیم‌کارت نات اکتیو",
+   "name1_max_lines": 3,
+   "name2": "Apple iPhone 16 Dual Sim Not Active 128 GB",
+   "web_client_absolute_url": "/p/935d1506-022e-43b8-b94e-b2543158bcd5/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%DB%8C%D9%81%D9%88%D9%86-16-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-128-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D9%86%D8%A7%D8%AA-%D8%A7%DA%A9%D8%AA%DB%8C%D9%88/",
+   "price": 197000000,
+   "price_prefix": "cheapest",
+   "price_text": "از ۱۹۷٫۰۰۰٫۰۰۰ تومان",
+   "price_text_mode": "active",
+   "shop_text": "در ۵۴ فروشگاه",
+   "stock_status": "",
+   "delivery_city_name": null,
+   "delivery_city_flag": null,
+   "is_adv": true,
+   "card_type": "default",
+   "estimated_sell": "",
+   "image_count": 7,
+   "direct_cta": null,
+   "has_nearby_shop": false,
+   "has_wiki": true,
+   "is_authentic": false
+  },
+  {
+   "badges": [
+    {
+     "text": "کارکرده",
+     "tooltip": null,
+     "badge_type": "stock_status"
+    }
+   ],
+   "discount_info": [],
+   "random_key": "7195272d-09a8-4e21-9993-c277037234d5",
+   "name1": "گوشی اپل دو سیم (استوک) iPhone 13 Pro Max | حافظه 256 گیگابایت",
+   "name1_max_lines": 3,
+   "name2": "Apple iPhone 13 Pro Max Dual Sim (Stock) 256 GB",
+   "web_client_absolute_url": "/p/7195272d-09a8-4e21-9993-c277037234d5/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-pro-max-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-256-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+   "price": 120000000,
+   "price_prefix": "cheapest",
+   "price_text": "از ۱۲۰٫۰۰۰٫۰۰۰ تومان",
+   "price_text_mode": "active",
+   "shop_text": "در ۱۸ فروشگاه",
+   "stock_status": "کارکرده",
+   "delivery_city_name": null,
+   "delivery_city_flag": null,
+   "is_adv": false,
+   "card_type": "default",
+   "estimated_sell": "",
+   "image_count": 7,
+   "direct_cta": null,
+   "has_nearby_shop": false,
+   "has_wiki": true,
+   "is_authentic": false
+  },
+  {
+   "badges": [
+    {
+     "text": "کارکرده",
+     "tooltip": null,
+     "badge_type": "stock_status"
+    }
+   ],
+   "discount_info": [],
+   "random_key": "98d205a7-2547-4d0c-931b-436bf100229a",
+   "name1": "گوشی اپل (استوک) iPhone 13 Pro | حافظه 256 گیگابایت",
+   "name1_max_lines": 3,
+   "name2": "Apple iPhone 13 Pro (Stock) 256 GB",
+   "web_client_absolute_url": "/p/98d205a7-2547-4d0c-931b-436bf100229a/%DA%AF%D9%88%D8%B4%DB%8C-%D8%A7%D9%BE%D9%84-%D8%A7%D8%B3%D8%AA%D9%88%DA%A9-iphone-13-pro-%D8%AD%D8%A7%D9%81%D8%B8%D9%87-256-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/",
+   "price": 105900000,
+   "price_prefix": "cheapest",
+   "price_text": "از ۱۰۵٫۹۰۰٫۰۰۰ تومان",
+   "price_text_mode": "active",
+   "shop_text": "در ۷ فروشگاه",
+   "stock_status": "کارکرده",
+   "delivery_city_name": null,
+   "delivery_city_flag": null,
+   "is_adv": false,
+   "card_type": "default",
+   "estimated_sell": "",
+   "image_count": 7,
+   "direct_cta": null,
+   "has_nearby_shop": false,
+   "has_wiki": false,
+   "is_authentic": false
+  }
+ ],
+ "count": 1200
+}
