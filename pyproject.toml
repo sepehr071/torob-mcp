@@ -1,6 +1,6 @@
 [project]
 name = "torob-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unofficial read-only MCP server for Torob: search Iranian shops, compare seller prices, price history, deal checks, baskets, installments, shops."
 readme = "README.md"
 license = "MIT"
