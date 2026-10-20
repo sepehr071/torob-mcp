@@ -1,7 +1,7 @@
 # torob-mcp
 
 Unofficial, read-only MCP server for Torob (torob.com), the Iranian price-comparison engine.
-GitHub `sepehr071/torob-mcp`, PyPI `torob-mcp`.
+Published: GitHub `sepehr071/torob-mcp`, PyPI `torob-mcp`, MCP Registry `io.github.sepehr071/torob-mcp`, listed in `../../awesome-iran-mcp`.
 It is a sibling of `../fidibo-mcp` and `../digikala-mcp` and copies their layout and idioms; keep them in step.
 
 API map this server is built on (endpoints, samples, quirks, test report): `../torob/` (partial: see "Verification
@@ -99,8 +99,8 @@ price-change-info, category tree with counts.
   `میانگین قیمت` (average) and `کمترین قیمت` (minimum).
 - Card `shop_text` is either «در N فروشگاه» or «در <shop name>» (one shop).
 
-## Release (when it is time)
+## Release
 
-Bump `version` in `pyproject.toml` and both versions in `server.json`, `git init`, create the GitHub repo, tag `vX.Y.Z`.
-`.github/workflows/publish.yml` (copied from fidibo-mcp, untested here) publishes to PyPI and the MCP Registry.
-After the first release add the server to `../awesome-iran-mcp` and the server table in `../README.md`.
+Bump `version` in `pyproject.toml` and both versions in `server.json`, update `uv.lock` if deps changed, commit,
+then `git tag vX.Y.Z && git push --tags`. `.github/workflows/publish.yml` tests, publishes to PyPI (trusted
+publishing, environment `pypi`), creates the GitHub Release and publishes to the MCP Registry (GitHub OIDC).
