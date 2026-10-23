@@ -1,7 +1,7 @@
 # torob-mcp
 
 Unofficial, read-only MCP server for Torob (torob.com), the Iranian price-comparison engine.
-Published: GitHub `sepehr071/torob-mcp`, PyPI `torob-mcp`, MCP Registry `io.github.sepehr071/torob-mcp`, listed in `../../awesome-iran-mcp`.
+Published: GitHub `sepehr071/torob-mcp`, PyPI `torob-mcp`, MCP Registry `io.github.sepehr071/torob-mcp`, listed in `../../iran-mcp`.
 It is a sibling of `../fidibo-mcp` and `../digikala-mcp` and copies their layout and idioms; keep them in step.
 
 API map this server is built on (endpoints, samples, quirks, test report): `../torob/` (partial: see "Verification
