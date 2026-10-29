@@ -13,6 +13,7 @@ check the price history, judge a deal and find the cheapest shop for a whole sho
 [![CI](https://github.com/sepehr071/torob-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sepehr071/torob-mcp/actions/workflows/ci.yml)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.sepehr071%2Ftorob--mcp-7c3aed)](https://registry.modelcontextprotocol.io/?q=torob-mcp)
 [![License: MIT](https://img.shields.io/badge/license-MIT-16a34a)](https://github.com/sepehr071/torob-mcp/blob/main/LICENSE)
+[![mcpfarsi](https://mcpfarsi.ir/badge/torob-mcp.svg)](https://mcpfarsi.ir/servers/torob-mcp/)
 
 [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=torob&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJ0b3JvYi1tY3AiXX0=)
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_torob--mcp-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=torob&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22torob-mcp%22%5D%7D)
@@ -394,6 +395,7 @@ publishes to PyPI and the [MCP Registry](https://registry.modelcontextprotocol.i
 - [MasterKala MCP server](https://github.com/sepehr071/masterkala-mcp) for gadgets and phone accessories
 - [Okala MCP server](https://github.com/sepehr071/okala-mcp) for online grocery shopping
 - [iran-mcp](https://github.com/sepehr071/iran-mcp): catalog of all Iranian-service MCP servers
+- Listed on [mcpfarsi.ir](https://mcpfarsi.ir/servers/torob-mcp/), the Persian MCP marketplace
 
 ## Disclaimer
 

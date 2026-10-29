@@ -35,6 +35,7 @@ Homepage = "https://github.com/sepehr071/torob-mcp"
 Source = "https://github.com/sepehr071/torob-mcp"
 Changelog = "https://github.com/sepehr071/torob-mcp/releases"
 Issues = "https://github.com/sepehr071/torob-mcp/issues"
+Website = "https://mcpfarsi.ir/servers/torob-mcp/"
 
 [project.scripts]
 torob-mcp = "torob_mcp.server:main"
