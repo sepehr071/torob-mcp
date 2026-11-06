@@ -26,7 +26,11 @@ async def test_tb_product(client, api):
     api[DETAILS] = fixture("details.json")
     out = await run(client, "tb_product", {"product": PRK})
     assert api.params()["prk"] == PRK
-    assert out["id"] == PRK and out["name_en"].startswith("Apple iPhone 13 Pro") and "url" not in out
+    assert (
+        out["id"] == PRK
+        and out["name_en"].startswith("Apple iPhone 13 Pro")
+        and out["url"] == f"https://torob.com/p/{PRK}/"
+    )
     assert out["price_min"] == 113_000_000 and out["price_max"] == 212_056_000 and out["shops"] == 11
     assert out["online_offers"] == 69 and out["in_person_stores"] == 22 and out["condition"] == "کارکرده"
     assert out["category"] == {"id": 94, "path": ["موبایل و کالای دیجیتال", "گوشی موبایل"]}
@@ -64,7 +68,7 @@ async def test_tb_sellers(client, api):
     assert p["prk"] == PRK and p["list_type"] == "products_info"
     assert [o["price"] for o in out["offers"]] == [113_000_000, 113_000_000, 117_810_000]
     assert out["stats"]["min"] == 113_000_000 and out["stats"]["median"] == 113_000_000 and out["stats"]["usable"] == 3
-    assert out["offers"][0]["buyer_notes"] and "url" not in out
+    assert out["offers"][0]["buyer_notes"] and out["url"] == f"https://torob.com/p/{PRK}/"
 
 
 async def test_sellers_filters_and_unreliable_hidden_by_default(client, api):

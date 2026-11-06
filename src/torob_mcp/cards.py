@@ -44,11 +44,10 @@ def slim(d: dict[str, Any], keep: tuple[str, ...] = ()) -> dict[str, Any]:
 
 
 def card(c: dict[str, Any]) -> dict[str, Any]:
-    """A search / similar / trend / offer card -> {id, name, price, shops, ...}.
+    """A search / similar / trend / offer card -> {id, name, price, shops, url, ...}.
 
     `price` is the cheapest shop price in Toman or None. `shops` is the number of shops. A card that lists one
-    shop by name ('در دیجی اپال') has `shops` 1 and `shop` set. `ad` marks a sponsored slot. No `url`: it is always
-    product_url(id). Badges that only repeat `condition` are dropped.
+    shop by name ('در دیجی اپال') has `shops` 1 and `shop` set. `ad` marks a sponsored slot. Badges that only repeat `condition` are dropped.
     """
     prk = c.get("random_key") or c.get("prk") or ""
     text = c.get("shop_text") or ""
@@ -72,8 +71,9 @@ def card(c: dict[str, Any]) -> dict[str, Any]:
         "badges": badges,
         "discount": c.get("discount_info"),
         "image": c.get("image_url") or None,
+        "url": product_url(prk) if prk else None,
     }
-    return slim(out, keep=("id", "name", "price"))
+    return slim(out, keep=("id", "name", "price", "url"))
 
 
 def dedupe(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
-from .cards import UUID_RE, card, dedupe, seller_stats, slim, usable
+from .cards import UUID_RE, card, dedupe, product_url, seller_stats, slim, usable
 from .fa import norm
 from .http import ApiError, Blocked, api
 from .product import City, Ref, chart_data, chart_summary, details, offers, prk_of, series_of, spec_map, summary
@@ -61,7 +61,7 @@ async def tb_cheapest(
         ok = _pick(rows, installment_only, min_score)
         picks.append(
             {
-                "product": {"id": c["id"], "name": c["name"]},
+                "product": {"id": c["id"], "name": c["name"], "url": c["url"]},
                 "best_offer": ok[0] if ok else None,
                 "stats": seller_stats(rows),
             }
@@ -226,6 +226,7 @@ async def tb_deal_check(
         "cheapest_offer": best,
         "history": chart,
         "market": {k: stats.get(k) for k in ("usable", "min", "median", "max", "price_spread_pct")},
+        "url": product_url(prk),
     }
 
 
@@ -255,7 +256,7 @@ async def tb_basket(
             continue
         top = await _top_cards(text, condition, 5)
         if top:
-            resolved.append({"input": text, "id": top[0]["id"], "name": top[0]["name"]})
+            resolved.append({"input": text, "id": top[0]["id"], "name": top[0]["name"], "url": top[0]["url"]})
         else:
             missing.append(text)
     per_item: list[dict[Any, dict[str, Any]]] = []

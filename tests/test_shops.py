@@ -43,7 +43,7 @@ async def test_tb_find_shops(client, api):
     assert p["q"] == "موبایل" and p["page"] == "0" and p["shop_type"] == "all"
     assert out["shops"][0] == {
         "id": 299463, "name": "باوان موبایل", "city": "مهاباد", "province": "آذربایجان غربی",
-        "domain": "bavanmobile.ir", "score": 5,
+        "domain": "bavanmobile.ir", "score": 5, "url": "https://torob.com/shop/299463",
     }  # fmt: skip
     lar = await run(client, "tb_find_shops", {"query": "موبایل", "city": "لار", "kind": "offline"})
     assert [s["id"] for s in lar["shops"]] == [383332] and api.params()["shop_type"] == "offline"

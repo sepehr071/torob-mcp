@@ -93,8 +93,9 @@ async def tb_find_shops(
                     "province": s.get("province"),
                     "domain": s.get("domain"),
                     "score": s.get("shop_score") if s.get("shop_score") is not None else s.get("score"),
+                    "url": f"{SITE}/shop/{sid}",
                 },
-                keep=("id", "name"),
+                keep=("id", "name", "url"),
             )
         )
     if city:

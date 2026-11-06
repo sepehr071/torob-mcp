@@ -18,7 +18,7 @@ def test_card_price_is_toman_and_matches_price_text(name):
 def test_card_fields_and_nulls():
     c = card(fixture("search.json")["results"][0])
     assert c["id"] == "57ea65ae-0798-4cd0-96a7-38d8af180345" and c["shops"] == 11 and c["condition"] == "کارکرده"
-    assert "url" not in c and "ad" not in c  # url is the fixed pattern torob.com/p/<id>/
+    assert c["url"] == "https://torob.com/p/57ea65ae-0798-4cd0-96a7-38d8af180345/" and "ad" not in c
     assert "badges" not in c  # its only badge repeated `condition`
     assert card({"random_key": "x", "name1": "n", "price": 0})["price"] is None  # never 0
     assert toman(None) is None and toman("5") is None and toman(12.0) == 12
@@ -33,7 +33,9 @@ def test_card_marks_ads_and_skips_junk():
     rows = cards([{"random_key": "a", "name1": "x", "price": 5, "is_adv": True}, {"name1": "no id"}, "junk"])
     assert len(rows) == 1 and rows[0]["ad"] is True
     organic, ad = {"random_key": "b", "name1": "y", "price": 6}, {"random_key": "b", "name1": "y", "is_adv": True}
-    assert cards([organic, ad]) == [{"id": "b", "name": "y", "price": 6, "ad": True}]  # sponsored copy merged
+    assert cards([organic, ad]) == [
+        {"id": "b", "name": "y", "price": 6, "url": "https://torob.com/p/b/", "ad": True}
+    ]  # sponsored copy merged
 
 
 def test_seller_row_and_stats():

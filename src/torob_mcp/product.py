@@ -82,6 +82,7 @@ def summary(d: dict[str, Any]) -> dict[str, Any]:
         "id": prk,
         "name": clip(d.get("name1"), 200),
         "name_en": clip(d.get("name2"), 200),
+        "url": product_url(prk),
         "price_min": toman(d.get("min_price") or d.get("price")),
         "price_max": toman(d.get("max_price")),
         "shops": first_int(d.get("shop_text")),
@@ -93,7 +94,7 @@ def summary(d: dict[str, Any]) -> dict[str, Any]:
         "brand": {"id": brand["brand_id"], "name": brand["title"]} if brand else None,
         "image": _image(d),
     }
-    return slim(out, keep=("id", "name", "price_min", "available"))
+    return slim(out, keep=("id", "name", "url", "price_min", "available"))
 
 
 @tool("Product details")
@@ -159,6 +160,7 @@ async def tb_sellers(
         "matching": len(shown),
         "offers": shown[:limit],
         "hidden_unreliable": sum(1 for r in rows if r.get("unreliable")) if not include_unreliable else None,
+        "url": product_url(prk),
     }
     if output == "csv":
         cols = [
@@ -173,8 +175,8 @@ async def tb_sellers(
             "updated",
             "shop_id",
         ]
-        return {"csv": to_csv(shown[:limit], cols), "matching": len(shown), "url": product_url(prk)}
-    return slim(out, keep=("id", "stats", "offers"))
+        return {"csv": to_csv(shown[:limit], cols), "matching": len(shown), "url": out["url"]}
+    return slim(out, keep=("id", "stats", "offers", "url"))
 
 
 @tool("In-person stores")
@@ -205,6 +207,7 @@ async def tb_stores(
             "count": data.get("count", len(rows)),
             "open_now": sum(1 for r in rows if r.get("open")),
             "stores": rows[:limit],
+            "url": product_url(prk),
         },
         keep=("id", "count", "open_now", "stores"),
     )
@@ -254,6 +257,7 @@ async def tb_variants(product: Ref) -> dict[str, Any]:
                         "price": c["price"],
                         "shops": c.get("shops"),
                         "selected": it.get("selected"),
+                        "url": c["url"],
                     },
                     keep=("id", "price"),
                 )
@@ -364,7 +368,7 @@ async def tb_price_chart(
         for i in idx
         if i < len(labels)
     ]
-    return {"id": prk, "summary": chart_summary(chart), "series": rows}
+    return {"id": prk, "summary": chart_summary(chart), "series": rows, "url": product_url(prk)}
 
 
 @tool("Price history events")

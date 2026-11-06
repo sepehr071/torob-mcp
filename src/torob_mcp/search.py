@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
-from .cards import card, cards, clip, dedupe, product_url, to_csv
+from .cards import card, cards, clip, dedupe, to_csv
 from .fa import norm
 from .http import ApiError, api
 from .registry import tool
@@ -261,9 +261,7 @@ async def tb_search(
         out["notes"] = notes
     if output == "csv":
         return {
-            "csv": to_csv(
-                [r | {"url": product_url(r["id"])} for r in rows], ["id", "name", "price", "shops", "condition", "url"]
-            ),
+            "csv": to_csv(rows, ["id", "name", "price", "shops", "condition", "url"]),
             "count": count,
             "next_page": out["next_page"],
         }
