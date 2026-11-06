@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
-from .cards import card, cards, clip, to_csv
+from .cards import card, cards, clip, dedupe, product_url, to_csv
 from .fa import norm
 from .http import ApiError, api
 from .registry import tool
@@ -19,21 +19,17 @@ RESERVED = {"q", "query", "category", "brand", "price", "price__gt", "price__lt"
 
 Sort = Annotated[
     Literal["popular", "cheapest", "priciest", "newest", "most_sellers"],
-    Field(description="Order: popular (Torob default), cheapest, priciest, newest, most_sellers (most shops)."),
+    Field(description="most_sellers = most shops."),
 ]
 Category = Annotated[
     int,
-    Field(
-        ge=1,
-        le=10_000_000,
-        description="Torob category id, e.g. 94 (mobile phones). Find ids with tb_filters or tb_category.",
-    ),
+    Field(ge=1, le=10_000_000, description="Category id, e.g. 94 (mobile phones); see tb_filters."),
 ]
-Limit = Annotated[int, Field(ge=1, le=50, description="Products to return (default 10, max 50).")]
+Limit = Annotated[int, Field(ge=1, le=50)]
 
 
-def _price(v: Any) -> float | None:
-    return float(v) if isinstance(v, (int, float)) else None
+def _price(v: Any) -> int | None:
+    return int(v) if isinstance(v, (int, float)) else None
 
 
 async def city_id(city: int | str) -> int:
@@ -156,53 +152,36 @@ async def tb_search(
         Field(
             min_length=1,
             max_length=120,
-            description="Search text, Persian or Finglish, e.g. 'گوشی آیفون 13' or 'ayfon 13'. Optional when category is given.",
+            description="Persian or Finglish text, e.g. 'گوشی آیفون 13'. Optional with category.",
         ),
     ] = None,
     sort: Sort = "popular",
-    category: Annotated[
-        int | None, Field(ge=1, le=10_000_000, description="Limit to a category id (e.g. 94 = mobile phones).")
-    ] = None,
+    category: Annotated[int | None, Field(ge=1, le=10_000_000, description="Category id, e.g. 94.")] = None,
     brand: Annotated[
-        int | str | None,
-        Field(
-            description="Brand id (e.g. 14) or name (e.g. 'Apple', 'اپل'); needs query or category. Unknown names are refused with the real brand list."
-        ),
+        int | str | None, Field(description="Brand id or name ('Apple', 'اپل'); needs query or category.")
     ] = None,
-    min_price: Annotated[int | None, Field(ge=0, description="Lowest price in Toman.")] = None,
-    max_price: Annotated[int | None, Field(ge=1, description="Highest price in Toman, e.g. 30000000.")] = None,
-    available_only: Annotated[bool, Field(description="Only products in stock.")] = False,
-    condition: Annotated[
-        Literal["any", "new", "used"], Field(description="new, used (کارکرده / stock) or any.")
-    ] = "any",
-    in_person: Annotated[bool, Field(description="Only products with an in-person (offline) shop.")] = False,
-    installment: Annotated[bool, Field(description="Only products sold in installments (Torob Pay).")] = False,
+    min_price: Annotated[int | None, Field(ge=0, description="Toman.")] = None,
+    max_price: Annotated[int | None, Field(ge=1, description="Toman.")] = None,
+    available_only: bool = False,
+    condition: Annotated[Literal["any", "new", "used"], Field(description="used = کارکرده / stock.")] = "any",
+    in_person: Annotated[bool, Field(description="Only products with an in-person shop.")] = False,
+    installment: Annotated[bool, Field(description="Only installment (Torob Pay) products.")] = False,
     city: Annotated[
         int | str | None,
-        Field(
-            description="City id or name; sellers near it are preferred. Effect on search is Torob-side and unverified, use tb_sellers(city=) for exact local offers."
-        ),
+        Field(description="City id or name; effect unverified, use tb_sellers(city=) for local offers."),
     ] = None,
     filters: Annotated[
         dict[str, str] | None,
-        Field(
-            description="Extra attribute filters {slug: value} from tb_filters, e.g. {'storage': '256 gb', 'ram': '8 gb'}. Validated: unknown slugs or values are refused."
-        ),
+        Field(description="Attribute filters {slug: value} from tb_filters, e.g. {'storage': '256 gb'}."),
     ] = None,
-    page: Annotated[int, Field(ge=0, le=100, description="0-based page (default 0).")] = 0,
+    page: Annotated[int, Field(ge=0, le=100, description="0-based.")] = 0,
     limit: Limit = 10,
-    output: Annotated[
-        Literal["json", "csv"], Field(description="json (default) or csv text of the cards for export.")
-    ] = "json",
+    output: Literal["json", "csv"] = "json",
 ) -> dict[str, Any]:
-    """Search Torob for products; each card has the cheapest shop price (Toman), shop count, image and URL.
+    """Search Torob for products; each card has the cheapest shop price (Toman) and the shop count.
 
-    Use first for any "find / how much is X" question. Cards are products (one per model/variant), not shop offers:
-    the price is the cheapest across shops. Next: tb_sellers (all offers), tb_cheapest (best offer for a query),
-    tb_product (specs). Prices are Toman; `price` is null when Torob lists none. Unknown query words and weak
-    matches set `low_confidence` and `unmatched_terms`; `spellcheck` / `suggested_queries` help rephrase.
-    `count` stops at 1200 (`count_capped`). `ad` marks sponsored cards. `min_price`/`max_price` in the reply are
-    the span of the unfiltered result.
+    Weak matches set `low_confidence` and `unmatched_terms`; `spellcheck` / `suggested_queries` help rephrase.
+    `price_span` is the span of the unfiltered result.
     """
     if not query and category is None:
         raise ApiError("Give a query, a category, or both.")
@@ -237,7 +216,7 @@ async def tb_search(
         params["cities"] = cid
     data = await api("/v4/base-product/search/", params, city=params.get("cities"))
     raw = [c for c in data.get("results") or [] if isinstance(c, dict)]
-    rows = [card(c) for c in raw]
+    rows = dedupe([card(c) for c in raw])
     notes: list[str] = []
     # Torob ignores filters it does not understand; check the bounds ourselves and say so
     if min_price or max_price:
@@ -282,7 +261,9 @@ async def tb_search(
         out["notes"] = notes
     if output == "csv":
         return {
-            "csv": to_csv(rows, ["id", "name", "price", "shops", "condition", "url"]),
+            "csv": to_csv(
+                [r | {"url": product_url(r["id"])} for r in rows], ["id", "name", "price", "shops", "condition", "url"]
+            ),
             "count": count,
             "next_page": out["next_page"],
         }
@@ -291,14 +272,11 @@ async def tb_search(
 
 @tool("Suggestions")
 async def tb_suggest(
-    text: Annotated[
-        str, Field(min_length=1, max_length=80, description="Typed text, Persian or Finglish (e.g. 'ayfon', 'لپ').")
-    ],
+    text: Annotated[str, Field(min_length=1, max_length=80, description="Typed text, e.g. 'ayfon' or 'لپ'.")],
 ) -> dict[str, Any]:
-    """Torob's own autocomplete: up to 8 search phrases for the typed text (also fixes Finglish and colloquial wording).
+    """Torob's autocomplete: up to 8 search phrases for typed text (fixes Finglish and colloquial wording).
 
-    Use to find how shoppers phrase a product before tb_search. Not rate limited by Torob, so it also works while
-    other calls are blocked.
+    Use before tb_search. Works even while other calls are blocked.
     """
     data = await api("/suggestion2/", {"q": text, "source": SOURCE}, guard=False)
     phrases = [s["text"] for s in data if isinstance(s, dict) and s.get("text")] if isinstance(data, list) else []
@@ -309,14 +287,13 @@ async def tb_suggest(
 async def tb_filters(
     query: Annotated[
         str | None,
-        Field(min_length=1, max_length=120, description="Search text whose filters you want, e.g. 'لپ تاپ'."),
+        Field(min_length=1, max_length=120, description="Search text, e.g. 'لپ تاپ'."),
     ] = None,
-    category: Annotated[int | None, Field(ge=1, le=10_000_000, description="Category id (e.g. 94).")] = None,
+    category: Annotated[int | None, Field(ge=1, le=10_000_000)] = None,
 ) -> dict[str, Any]:
-    """Which filters exist for a query/category: category children, brands, price span, sort options, attributes.
+    """Which filters exist for a query/category: sub-categories, brands, price span, sort options, attributes.
 
-    Use before tb_search when you need a category id, a brand id, or the exact attribute slugs and values
-    (storage, ram, ...) for `filters`. Needs a query or a category. Brands list is complete when a category is known.
+    Use before tb_search for category / brand ids or the attribute slugs and values of `filters`.
     """
     if not query and category is None:
         raise ApiError("Give a query, a category, or both.")
@@ -353,16 +330,14 @@ def _cats(rows: Any) -> list[dict[str, Any]]:
 async def tb_category(
     category: Category,
     sort: Sort = "popular",
-    brand: Annotated[int | str | None, Field(description="Brand id or name inside this category.")] = None,
-    max_price: Annotated[int | None, Field(ge=1, description="Highest price in Toman.")] = None,
+    brand: Annotated[int | str | None, Field(description="Brand id or name.")] = None,
+    max_price: Annotated[int | None, Field(ge=1, description="Toman.")] = None,
     page: Annotated[int, Field(ge=0, le=100)] = 0,
     limit: Limit = 10,
 ) -> dict[str, Any]:
-    """A category page: where it sits in the tree, its sub-categories, and its top products.
+    """A category page: its parents, sub-categories and top products.
 
-    Use to walk the category tree (parents and children come with each reply; Torob has no tree endpoint, so
-    counts per sub-category are not available) and to list a category's products. For text search inside a
-    category use tb_search(category=).
+    Use to walk the category tree. For text search in a category use tb_search(category=).
     """
     data = await api(
         "/v4/base-product/search/",
@@ -397,15 +372,10 @@ async def tb_category(
 @tool("Brands")
 async def tb_brands(
     category: Category,
-    search: Annotated[
-        str | None, Field(min_length=1, max_length=40, description="Keep brands whose name contains this text.")
-    ] = None,
+    search: Annotated[str | None, Field(min_length=1, max_length=40, description="Name contains this text.")] = None,
     limit: Annotated[int, Field(ge=1, le=100)] = 60,
 ) -> dict[str, Any]:
-    """All brands of a category with their ids (for tb_search brand=).
-
-    Use when you know the category and need a brand id; tb_search also accepts the brand name directly.
-    """
+    """All brands of a category with their ids (for tb_search brand=)."""
     data = await api("/v4/brand/list/", {"cat_list": category})
     rows = data if isinstance(data, list) else (data or {}).get("results") or []
     brands = [_brand_row(b) for b in rows if isinstance(b, dict) and b.get("id")]
@@ -417,12 +387,9 @@ async def tb_brands(
 
 @tool("Search trends")
 async def tb_trends(
-    limit: Annotated[int, Field(ge=1, le=30, description="Trends to return (default 10).")] = 10,
+    limit: Annotated[int, Field(ge=1, le=30)] = 10,
 ) -> dict[str, Any]:
-    """What people search on Torob right now, each with the category it lands in and one sample product.
-
-    Use for "what is trending" or to pick a query. Follow with tb_search(query=...).
-    """
+    """What people search on Torob right now, each with its category and one sample product."""
     data = await api("/v4/search-trends/")
     items = data if isinstance(data, list) else (data or {}).get("results") or []
     trends = []
@@ -439,21 +406,11 @@ async def tb_trends(
 
 @tool("Special offers")
 async def tb_offers(
-    page: Annotated[int, Field(ge=0, le=50, description="0-based page.")] = 0,
-    size: Annotated[
-        int,
-        Field(
-            ge=1,
-            le=3,
-            description="Rows per page (default 1). Torob replies are huge (about 900 KB for one row), so keep it small.",
-        ),
-    ] = 1,
-    limit: Annotated[int, Field(ge=1, le=30, description="Products per row to return (default 10).")] = 10,
+    page: Annotated[int, Field(ge=0, le=50)] = 0,
+    size: Annotated[int, Field(ge=1, le=3, description="Rows per page; each row is ~900 KB upstream.")] = 1,
+    limit: Annotated[int, Field(ge=1, le=30, description="Products per row.")] = 10,
 ) -> dict[str, Any]:
-    """Torob's special-offers feed ("پیشنهاد ویژه"): themed rows with discounted or promoted products.
-
-    Use for "what is on sale". Each row has a theme title and product cards. Follow with tb_product / tb_sellers.
-    """
+    """Torob's special-offers feed ("پیشنهاد ویژه"): themed rows with discounted or promoted products."""
     data = await api("/v4/special-offers/", {"page": page, "size": size, "flavor_name": "default", "source": SOURCE})
     rows = []
     for r in (data.get("results") if isinstance(data, dict) else None) or []:
@@ -481,18 +438,11 @@ async def tb_offers(
 async def tb_cities(
     search: Annotated[
         str | None,
-        Field(
-            min_length=1,
-            max_length=40,
-            description="City name or part of it (Persian), e.g. 'مشهد'. Omit for the most visited cities.",
-        ),
+        Field(min_length=1, max_length=40, description="Persian name or part, e.g. 'مشهد'; omit for most visited."),
     ] = None,
     limit: Annotated[int, Field(ge=1, le=50)] = 10,
 ) -> dict[str, Any]:
-    """City ids for the `city` filter of tb_search, tb_sellers and tb_stores (392 Tehran, 468 Mashhad, 240 Isfahan).
-
-    With `search` finds a city by name; without it lists the most visited cities.
-    """
+    """City ids for `city` arguments (392 Tehran, 468 Mashhad, 240 Isfahan)."""
     if search:
         data = await api("/v4/city/list/", {"search": search, "size": limit})
     else:

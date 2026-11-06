@@ -14,19 +14,9 @@ from .http import SITE, ApiError, Blocked, api
 from .registry import tool
 from .search import SOURCE, city_id
 
-Ref = Annotated[
-    str,
-    Field(
-        min_length=8,
-        max_length=400,
-        description="Product id (the UUID from search cards, e.g. '57ea65ae-0798-4cd0-96a7-38d8af180345'), a '/p/<id>/...' path or a full torob.com product URL.",
-    ),
-]
-City = Annotated[
-    int | str | None,
-    Field(description="City id or name (e.g. 'مشهد' or 468): only offers that deliver to / sit in that city."),
-]
-Limit = Annotated[int, Field(ge=1, le=50, description="Rows to return (default 15, max 50).")]
+Ref = Annotated[str, Field(min_length=8, max_length=400, description="Product id (UUID) or torob.com product URL.")]
+City = Annotated[int | str | None, Field(description="City id or name: only offers serving that city.")]
+Limit = Annotated[int, Field(ge=1, le=50)]
 
 
 def prk_of(ref: str) -> str:
@@ -92,7 +82,6 @@ def summary(d: dict[str, Any]) -> dict[str, Any]:
         "id": prk,
         "name": clip(d.get("name1"), 200),
         "name_en": clip(d.get("name2"), 200),
-        "url": product_url(prk),
         "price_min": toman(d.get("min_price") or d.get("price")),
         "price_max": toman(d.get("max_price")),
         "shops": first_int(d.get("shop_text")),
@@ -104,21 +93,17 @@ def summary(d: dict[str, Any]) -> dict[str, Any]:
         "brand": {"id": brand["brand_id"], "name": brand["title"]} if brand else None,
         "image": _image(d),
     }
-    return slim(out, keep=("id", "name", "url", "price_min", "available"))
+    return slim(out, keep=("id", "name", "price_min", "available"))
 
 
 @tool("Product details")
 async def tb_product(
     product: Ref,
-    full_specs: Annotated[
-        bool, Field(description="Also return the complete spec table grouped by section (long).")
-    ] = False,
+    full_specs: Annotated[bool, Field(description="Add the full spec table by section (long).")] = False,
 ) -> dict[str, Any]:
-    """Full record of one product: name, price range across shops (Toman), category path, brand, key specs, cheapest offer.
+    """Full record of one product: name, price range (Toman), category, brand, key specs, cheapest offer.
 
-    Use after tb_search for specs and the price window. For every shop's price use tb_sellers; for a buying
-    decision tb_deal_check; to compare models tb_compare. `price_min`/`price_max` span all offers (including
-    unreliable ones); `cheapest_offer` is the cheapest usable one among the offers embedded in the page.
+    `price_min`/`price_max` include unreliable offers; `cheapest_offer` is the cheapest usable one on the page.
     """
     prk = prk_of(product)
     d = await details(prk)
@@ -145,24 +130,17 @@ async def tb_product(
 async def tb_sellers(
     product: Ref,
     city: City = None,
-    installment_only: Annotated[bool, Field(description="Only shops that sell it in installments (قسطی).")] = False,
-    warranty_only: Annotated[
-        bool, Field(description="Only offers with Torob's buyer-protection warranty (گارانتی ترب).")
-    ] = False,
-    min_score: Annotated[float, Field(ge=0, le=5, description="Only shops with at least this Torob score (0-5).")] = 0,
-    include_unreliable: Annotated[
-        bool, Field(description="Keep offers Torob flags as unreliable (bait or stale prices). Hidden by default.")
-    ] = False,
+    installment_only: Annotated[bool, Field(description="Installment (قسطی) shops only.")] = False,
+    warranty_only: Annotated[bool, Field(description="Torob warranty (گارانتی ترب) offers only.")] = False,
+    min_score: Annotated[float, Field(ge=0, le=5, description="Minimum shop score.")] = 0,
+    include_unreliable: Annotated[bool, Field(description="Keep offers flagged unreliable (bait or stale).")] = False,
     limit: Limit = 15,
-    output: Annotated[Literal["json", "csv"], Field(description="json (default) or csv text for export.")] = "json",
+    output: Literal["json", "csv"] = "json",
 ) -> dict[str, Any]:
     """Every online shop offer for a product, cheapest first, with trust, warranty, installment and delivery info.
 
-    Use to pick where to buy. Row fields: price (Toman, null when out of stock), score/votes (shop rating 0-5),
-    `unreliable` (Torob flags the price as bait or stale), `torob_warranty`, `installment`, `shipping`,
-    `buyer_notes` (Torob's order-volume and complaint sentences), `updated` (age of the price). `stats` are over
-    usable offers only (in stock, not unreliable): min / median / max and `price_spread_pct`. `city` filters to
-    shops serving that city. Torob returns all offers at once; `limit` slices them. Buy at `url`.
+    Use to pick where to buy. `score`/`votes`: shop rating 0-5; `unreliable`: bait or stale price; `buyer_notes`:
+    Torob's order-volume and complaint notes; `updated`: price age. `stats` cover usable offers only.
     """
     prk = prk_of(product)
     rows = await offers(prk, city)
@@ -181,7 +159,6 @@ async def tb_sellers(
         "matching": len(shown),
         "offers": shown[:limit],
         "hidden_unreliable": sum(1 for r in rows if r.get("unreliable")) if not include_unreliable else None,
-        "url": product_url(prk),
     }
     if output == "csv":
         cols = [
@@ -196,21 +173,20 @@ async def tb_sellers(
             "updated",
             "shop_id",
         ]
-        return {"csv": to_csv(shown[:limit], cols), "matching": len(shown), "url": out["url"]}
-    return slim(out, keep=("id", "stats", "offers", "url"))
+        return {"csv": to_csv(shown[:limit], cols), "matching": len(shown), "url": product_url(prk)}
+    return slim(out, keep=("id", "stats", "offers"))
 
 
 @tool("In-person stores")
 async def tb_stores(
     product: Ref,
     city: City = None,
-    with_location: Annotated[bool, Field(description="Add map coordinates (lat, lon) of each store.")] = False,
+    with_location: Annotated[bool, Field(description="Add lat/lon.")] = False,
     limit: Limit = 15,
 ) -> dict[str, Any]:
-    """In-person (offline) shops that stock a product: address, opening hours, open now, shelf price and its age.
+    """In-person shops that stock a product: address, opening hours, open now, shelf price and its age.
 
-    Use for "can I buy it today near me". Prices on shelves are set by the shop and can be stale (`price_updated`).
-    `city` narrows to one city (Torob filters by it server-side). Online offers are in tb_sellers.
+    Use for "can I buy it today near me". Online offers: tb_sellers.
     """
     prk = prk_of(product)
     cid = await city_id(city) if city is not None else None
@@ -229,7 +205,6 @@ async def tb_stores(
             "count": data.get("count", len(rows)),
             "open_now": sum(1 for r in rows if r.get("open")),
             "stores": rows[:limit],
-            "url": product_url(prk),
         },
         keep=("id", "count", "open_now", "stores"),
     )
@@ -237,10 +212,7 @@ async def tb_stores(
 
 @tool("Shop presence")
 async def tb_presence(product: Ref) -> dict[str, Any]:
-    """How widely a product is sold: online shops, in-person stores, installment shops, Torob-warranty shops, price window.
-
-    One cheap call to judge availability before digging into tb_sellers or tb_stores.
-    """
+    """How widely a product is sold: online shops, in-person stores, installment and warranty shops, price window."""
     d = await details(prk_of(product))
     flt = {
         f.get("action"): f
@@ -263,10 +235,7 @@ async def tb_presence(product: Ref) -> dict[str, Any]:
 
 @tool("Variants")
 async def tb_variants(product: Ref) -> dict[str, Any]:
-    """Sibling variants of a product (storage + RAM, colour, region ...) each with its own cheapest price.
-
-    Use to answer "what does the 512 GB version cost". Pass an option's `id` to the other tools.
-    """
+    """Sibling variants of a product (storage + RAM, colour, region ...) each with its own cheapest price."""
     d = await details(prk_of(product))
     groups = []
     for g in d.get("variants") or []:
@@ -285,7 +254,6 @@ async def tb_variants(product: Ref) -> dict[str, Any]:
                         "price": c["price"],
                         "shops": c.get("shops"),
                         "selected": it.get("selected"),
-                        "url": c["url"],
                     },
                     keep=("id", "price"),
                 )
@@ -373,18 +341,12 @@ async def tb_price_chart(
     product: Ref,
     points: Annotated[
         int,
-        Field(
-            ge=4,
-            le=60,
-            description="Latest chart points to return (default 26, about 6 months; Torob has about 52 weekly points).",
-        ),
+        Field(ge=4, le=60, description="Latest weekly points (26 = about 6 months)."),
     ] = 26,
 ) -> dict[str, Any]:
     """Price chart of a product (about a year, weekly): minimum and average price in Toman, with a buy-now verdict.
 
-    Use to see if now is a good time. `summary.verdict` is great / fair / high from where today's minimum price sits
-    among the period's weeks (`percentile` 0 = cheapest of the period). Dates are ISO (converted from Jalali).
-    For notable moves only see tb_price_history; for a full buying decision tb_deal_check.
+    `summary.verdict` (great / fair / high) follows `percentile`: share of weeks cheaper than now.
     """
     prk = prk_of(product)
     chart = await chart_data(prk)
@@ -402,21 +364,18 @@ async def tb_price_chart(
         for i in idx
         if i < len(labels)
     ]
-    return {"id": prk, "summary": chart_summary(chart), "series": rows, "url": product_url(prk)}
+    return {"id": prk, "summary": chart_summary(chart), "series": rows}
 
 
 @tool("Price history events")
 async def tb_price_history(
     product: Ref,
-    min_change_pct: Annotated[
-        int, Field(ge=1, le=90, description="Ignore moves smaller than this percent (default 3).")
-    ] = 3,
+    min_change_pct: Annotated[int, Field(ge=1, le=90, description="Ignore smaller moves (percent).")] = 3,
     limit: Annotated[int, Field(ge=1, le=30)] = 10,
 ) -> dict[str, Any]:
-    """Notable price moves of a product, newest first: drops, rises, lowest and highest point, last change.
+    """Notable price moves of a product, newest first, with the lowest and highest point.
 
-    Derived from the price chart's weekly minimum series (Torob's own change-event feed is not used), so moves are
-    per week, not per day. Use for "did the price just drop". Prices in Toman.
+    Weekly moves of the chart's minimum price; a negative `change_pct` is a drop.
     """
     prk = prk_of(product)
     chart = await chart_data(prk)
@@ -437,7 +396,6 @@ async def tb_price_history(
                     "from": series[a],
                     "to": series[b],
                     "change_pct": pct,
-                    "kind": "drop" if pct < 0 else "rise",
                 }
             )
     lo, hi = min(idx, key=lambda i: series[i]), max(idx, key=lambda i: series[i])
@@ -446,18 +404,13 @@ async def tb_price_history(
         "current": series[idx[-1]],
         "lowest": {"date": when(lo), "price": series[lo]},
         "highest": {"date": when(hi), "price": series[hi]},
-        "last_change": events[-1] if events else None,
         "events": events[::-1][:limit],
     }
 
 
 @tool("Similar products")
 async def tb_similar(product: Ref, limit: Limit = 10) -> dict[str, Any]:
-    """Products Torob shows as similar (alternatives in the same class), with cheapest price and shop count.
-
-    Use for "what else is like this". Torob ignores a page size, so the list is cut here. Compare candidates
-    with tb_compare.
-    """
+    """Products Torob shows as similar (alternatives in the same class), with cheapest price and shop count."""
     prk = prk_of(product)
     data = await api("/v4/base-product/similar-base-product/", {"prk": prk, "source": SOURCE})
     rows = cards(data.get("results") if isinstance(data, dict) else None)
@@ -466,24 +419,18 @@ async def tb_similar(product: Ref, limit: Limit = 10) -> dict[str, Any]:
 
 @tool("Product URL")
 async def tb_product_url(product: Ref) -> dict[str, Any]:
-    """Clean torob.com URL for a product id, '/p/<id>/...' path or any torob.com product link (no request is sent).
-
-    Use to hand the user a link. Torob redirects it to the canonical page with the product name.
-    """
+    """Clean torob.com URL for a product id, path or link (no request is sent)."""
     prk = prk_of(product)
     return {"id": prk, "url": product_url(prk), "site": SITE}
 
 
 @tool("Product cards")
 async def tb_products_batch(
-    products: Annotated[
-        list[Ref], Field(min_length=1, max_length=10, description="1 to 10 product ids, paths or URLs.")
-    ],
+    products: Annotated[list[Ref], Field(min_length=1, max_length=10)],
 ) -> dict[str, Any]:
     """Short records (name, price window, shop counts, category, brand) for up to 10 products at once.
 
-    Use to refresh a list of known ids. Torob has no batch call, so this makes one request per product
-    (spaced out); failed ones are reported in `errors` and do not stop the rest.
+    One request per product; failures go to `errors`.
     """
     out, errors = [], []
     for ref in dict.fromkeys(prk_of(p) for p in products):

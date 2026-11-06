@@ -50,6 +50,7 @@ _NAV_ONLY = (b"upgrade-insecure-requests", b"sec-fetch-user")
 MAX_CONCURRENCY = 1
 MIN_INTERVAL = float(os.environ.get("TOROB_MCP_MIN_INTERVAL") or 2.0)  # seconds between upstream calls
 JITTER = (0.5, 2.0)  # seconds added before each upstream call, on top of MIN_INTERVAL
+LONE_GAP = 2.0  # a call with no upstream request in this many seconds before it is not part of a burst: no jitter
 COOLDOWN = 30 * 60  # seconds without any call after an HTTP 490
 RETRY_DELAY = 0.5  # seconds; doubled per retry, with jitter
 MAX_RETRIES = 2
@@ -71,6 +72,7 @@ _browser_lock: asyncio.Lock | None = None
 _cache: dict[str, tuple[float, Any]] = {}
 _blocked_until = 0.0
 _next_slot = 0.0
+_last_sent = -1e9  # when the last upstream request finished (or failed)
 _cleared_at = -1e9  # when a browser last got cookies; callers queued on the lock reuse them
 RECENT_CLEAR = 30  # seconds
 
@@ -98,10 +100,11 @@ def _now() -> float:
 
 def reset() -> None:
     """Forget the cache, the cooldown and the pacing slot (tests)."""
-    global _blocked_until, _next_slot, _cleared_at
+    global _blocked_until, _next_slot, _cleared_at, _last_sent
     _cache.clear()
     _clearance.clear()
     _blocked_until = _next_slot = 0.0
+    _last_sent = -1e9
     _cleared_at = -1e9
 
 
@@ -294,15 +297,20 @@ async def _send(
     url: str, params: dict[str, Any], headers: dict[str, str] | None
 ) -> tuple[httpx.Response, httpx.AsyncClient]:
     """GET with up to MAX_RETRIES retries on timeouts, dropped connections, 429 and 502/503/504; 403/490 never."""
+    global _last_sent
     for attempt in range(MAX_RETRIES + 1):
         client, limit = _get_client()
         last = attempt == MAX_RETRIES
         wait = min(RETRY_DELAY * 2**attempt * random.uniform(1, 1.5), MAX_RETRY_WAIT)
         try:
             async with limit:
-                if delay := random.uniform(*JITTER):
+                lone = attempt == 0 and _now() - _last_sent >= LONE_GAP  # no burst to hide: skip the jitter
+                if not lone and (delay := random.uniform(*JITTER)):
                     await asyncio.sleep(delay)
-                r = await client.get(url, params=params, headers=headers)
+                try:
+                    r = await client.get(url, params=params, headers=headers)
+                finally:
+                    _last_sent = _now()
         except httpx.TimeoutException as e:
             if last:
                 raise ApiError("torob.com did not answer in time. Try again in a moment.") from e

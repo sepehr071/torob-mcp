@@ -6,14 +6,14 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
-from .cards import UUID_RE, card, product_url, seller_stats, slim, usable
+from .cards import UUID_RE, card, dedupe, seller_stats, slim, usable
 from .fa import norm
 from .http import ApiError, Blocked, api
 from .product import City, Ref, chart_data, chart_summary, details, offers, prk_of, series_of, spec_map, summary
 from .registry import tool
 from .search import SORTS, SOURCE
 
-Condition = Annotated[Literal["new", "used", "any"], Field(description="new (default), used (کارکرده / stock) or any.")]
+Condition = Annotated[Literal["new", "used", "any"], Field(description="used = کارکرده / stock.")]
 
 
 async def _top_cards(query: str, condition: str, size: int, **extra: Any) -> list[dict[str, Any]]:
@@ -30,7 +30,7 @@ async def _top_cards(query: str, condition: str, size: int, **extra: Any) -> lis
         }
         | extra,
     )
-    rows = [card(c) for c in data.get("results") or [] if isinstance(c, dict) and c.get("random_key")]
+    rows = dedupe([card(c) for c in data.get("results") or [] if isinstance(c, dict) and c.get("random_key")])
     rows = [r for r in rows if r["price"] is not None]
     return sorted(rows, key=lambda r: bool(r.get("ad")))
 
@@ -41,25 +41,16 @@ def _pick(rows: list[dict[str, Any]], installment_only: bool, min_score: float) 
 
 @tool("Cheapest offer")
 async def tb_cheapest(
-    query: Annotated[
-        str, Field(min_length=1, max_length=120, description="Product to price, e.g. 'آیفون 13 پرو 256' or 'ps5 slim'.")
-    ],
-    candidates: Annotated[
-        int, Field(ge=1, le=5, description="How many top search matches to check (default 3; one request each).")
-    ] = 3,
+    query: Annotated[str, Field(min_length=1, max_length=120, description="Product, e.g. 'ps5 slim'.")],
+    candidates: Annotated[int, Field(ge=1, le=5, description="Top search matches to check (one request each).")] = 3,
     condition: Condition = "new",
     city: City = None,
-    installment_only: Annotated[bool, Field(description="Only shops offering installments (قسطی).")] = False,
-    min_score: Annotated[
-        float, Field(ge=0, le=5, description="Only shops with at least this Torob score (default 0).")
-    ] = 0,
+    installment_only: Annotated[bool, Field(description="Installment (قسطی) shops only.")] = False,
+    min_score: Annotated[float, Field(ge=0, le=5, description="Minimum shop score.")] = 0,
 ) -> dict[str, Any]:
     """Cheapest trustworthy offer for a product named in words: searches, then looks at every shop's offer.
 
-    Use for "where is X cheapest". It checks the top `candidates` matches (not just the lowest card price, which
-    may be an unreliable or out-of-stock offer), skips unreliable and out-of-stock offers, and returns the best
-    offer for each match plus the overall cheapest. Always check that the matched product name is the one wanted.
-    Costs 1 + candidates requests.
+    Gives the best usable offer per top match and the overall `cheapest`; check the matched name.
     """
     found = (await _top_cards(query, condition, max(candidates, 5)))[:candidates]
     if not found:
@@ -70,7 +61,7 @@ async def tb_cheapest(
         ok = _pick(rows, installment_only, min_score)
         picks.append(
             {
-                "product": {"id": c["id"], "name": c["name"], "url": c["url"]},
+                "product": {"id": c["id"], "name": c["name"]},
                 "best_offer": ok[0] if ok else None,
                 "stats": seller_stats(rows),
             }
@@ -78,7 +69,12 @@ async def tb_cheapest(
     priced = [p for p in picks if p["best_offer"]]
     out: dict[str, Any] = {"query": query, "picks": picks}
     if priced:
-        out["cheapest"] = min(priced, key=lambda p: p["best_offer"]["price"])
+        best = min(priced, key=lambda p: p["best_offer"]["price"])
+        offer = best["best_offer"]  # the full row is already in `picks`
+        out["cheapest"] = {
+            "product": best["product"],
+            "best_offer": {"shop_id": offer.get("shop_id"), "shop": offer.get("shop"), "price": offer["price"]},
+        }
     else:
         out["note"] = "No usable offer matched the filters (in stock, not unreliable, installment / score / city)."
     return out
@@ -86,13 +82,11 @@ async def tb_cheapest(
 
 @tool("Compare products")
 async def tb_compare(
-    products: Annotated[list[Ref], Field(min_length=2, max_length=5, description="2 to 5 product ids, paths or URLs.")],
+    products: Annotated[list[Ref], Field(min_length=2, max_length=5)],
 ) -> dict[str, Any]:
     """Side-by-side comparison of 2-5 products: only the specs that differ, the price window, and which is cheapest.
 
-    Use after tb_search / tb_similar to choose between models. `differences` maps a spec name to its value for each
-    product in the order of `products` (null = Torob lists nothing). `cheapest` flags the lowest price_min. One
-    request per product.
+    `differences` maps a spec to its values in `products` order (null = not listed).
     """
     ids = list(dict.fromkeys(prk_of(p) for p in products))
     if len(ids) < 2:
@@ -129,28 +123,23 @@ async def tb_compare(
 
 @tool("Best value under budget")
 async def tb_best_value(
-    budget: Annotated[int, Field(ge=1000, description="Maximum price in Toman, e.g. 30000000.")],
+    budget: Annotated[int, Field(ge=1000, description="Max price, Toman.")],
     query: Annotated[
         str | None,
-        Field(min_length=1, max_length=120, description="What to buy, e.g. 'لپ تاپ'. Optional when category is given."),
+        Field(min_length=1, max_length=120, description="What to buy, e.g. 'لپ تاپ'. Optional with category."),
     ] = None,
-    category: Annotated[int | None, Field(ge=1, le=10_000_000, description="Category id (e.g. 94).")] = None,
+    category: Annotated[int | None, Field(ge=1, le=10_000_000)] = None,
     rank_by: Annotated[
         Literal["budget_reach", "popular", "cheapest"],
-        Field(
-            description="budget_reach (default): the most expensive models that still fit the budget first (usually the most capable); popular: Torob's popularity order; cheapest."
-        ),
+        Field(description="budget_reach: priciest models that fit first."),
     ] = "budget_reach",
-    min_shops: Annotated[
-        int, Field(ge=1, le=100, description="Skip products sold by fewer shops (default 3: filters odd listings).")
-    ] = 3,
+    min_shops: Annotated[int, Field(ge=1, le=100, description="Skip products with fewer shops.")] = 3,
     condition: Condition = "new",
     limit: Annotated[int, Field(ge=1, le=30)] = 10,
 ) -> dict[str, Any]:
     """Ranked product picks that fit a budget (Toman), for "best phone under 30 million".
 
-    Torob has no quality score, so ranking is by price reach, popularity or cheapness; read the names and check specs
-    with tb_compare. Only in-stock products with at least `min_shops` shops. `budget_used_pct` is price / budget.
+    No quality score: check specs with tb_compare. In-stock products only.
     """
     if not query and category is None:
         raise ApiError("Give a query, a category, or both.")
@@ -160,7 +149,7 @@ async def tb_best_value(
         {"q": query, "query": query, "category": category, "price__lt": budget, "sort": SORTS[sort], "available": True, "page": 0, "size": 50, "source": SOURCE,
          "stock_status": {"new": "new", "used": "stock"}.get(condition)},
     )  # fmt: skip
-    rows = [card(c) for c in data.get("results") or [] if isinstance(c, dict) and c.get("random_key")]
+    rows = dedupe([card(c) for c in data.get("results") or [] if isinstance(c, dict) and c.get("random_key")])
     keep = [
         r
         for r in rows
@@ -182,15 +171,13 @@ async def tb_deal_check(
     product: Ref,
     price: Annotated[
         int | None,
-        Field(ge=1000, description="A price in Toman you were offered; default: today's cheapest usable offer."),
+        Field(ge=1000, description="Offered price, Toman; default today's cheapest usable offer."),
     ] = None,
 ) -> dict[str, Any]:
     """Is this a good price? Score 0-100 from the product's price history and today's competing offers.
 
-    Heuristic (documented, not Torob's): start at 100 minus the percentile of the price in the past year's weekly
-    minimums (cheaper than most weeks = high score), minus up to 20 points when the price is above today's cheapest
-    usable offer. 70+ good deal, 40-69 fair, below 40 wait or shop around. `reasons` explains the score. Costs 2
-    requests (chart + sellers).
+    100 minus the price's percentile among past weekly minimums, minus up to 20 when above today's cheapest usable
+    offer. `reasons` explains it.
     """
     prk = prk_of(product)
     rows = await offers(prk)
@@ -239,7 +226,6 @@ async def tb_deal_check(
         "cheapest_offer": best,
         "history": chart,
         "market": {k: stats.get(k) for k in ("usable", "min", "median", "max", "price_spread_pct")},
-        "url": product_url(prk),
     }
 
 
@@ -250,19 +236,17 @@ async def tb_basket(
         Field(
             min_length=2,
             max_length=8,
-            description="2 to 8 things to buy: product names ('آیفون 13 128') or product ids / URLs.",
+            description="Product names ('آیفون 13 128') or ids / URLs.",
         ),
     ],
     condition: Condition = "new",
     city: City = None,
-    installment_only: Annotated[bool, Field(description="Only shops offering installments.")] = False,
+    installment_only: Annotated[bool, Field(description="Installment shops only.")] = False,
     min_score: Annotated[float, Field(ge=0, le=5)] = 0,
 ) -> dict[str, Any]:
     """Cheapest shop for a whole shopping list: best single shop that sells everything, and the split-cart total.
 
-    Each name resolves to its top search match (check `items[].name`; pass ids to be exact), then every shop's usable
-    offer is compared. `single_shop` lists shops that carry ALL items by total price (one delivery); `split_cart` buys
-    each item at its cheapest shop. Costs up to 2 requests per item.
+    Names resolve to the top search match (check `items[].name`; pass ids to be exact).
     """
     resolved, missing = [], []
     for text in dict.fromkeys(items):
@@ -284,7 +268,6 @@ async def tb_basket(
         it["best_price"] = ok[0]["price"] if ok else None
         it["cheapest_shop"] = ok[0].get("shop") if ok else None
         it["shops"] = len(by_shop)
-        it["url"] = product_url(it["id"])
     covered = [i for i, s in enumerate(per_item) if s]
     shops = set.intersection(*(set(per_item[i]) for i in covered)) if covered else set()
     singles = []

@@ -44,15 +44,21 @@ def slim(d: dict[str, Any], keep: tuple[str, ...] = ()) -> dict[str, Any]:
 
 
 def card(c: dict[str, Any]) -> dict[str, Any]:
-    """A search / similar / trend / offer card -> {id, name, price, shops, url, ...}.
+    """A search / similar / trend / offer card -> {id, name, price, shops, ...}.
 
     `price` is the cheapest shop price in Toman or None. `shops` is the number of shops. A card that lists one
-    shop by name ('در دیجی اپال') has `shops` 1 and `shop` set. `ad` marks a sponsored slot.
+    shop by name ('در دیجی اپال') has `shops` 1 and `shop` set. `ad` marks a sponsored slot. No `url`: it is always
+    product_url(id). Badges that only repeat `condition` are dropped.
     """
     prk = c.get("random_key") or c.get("prk") or ""
     text = c.get("shop_text") or ""
     n = first_int(text)
-    badges = [b.get("text") for b in c.get("badges") or [] if isinstance(b, dict) and b.get("text")]
+    condition = c.get("stock_status") or None
+    badges = [
+        b.get("text")
+        for b in c.get("badges") or []
+        if isinstance(b, dict) and b.get("text") not in (None, "", condition)
+    ]
     out = {
         "id": prk,
         "name": clip(c.get("name1"), 200),
@@ -60,19 +66,31 @@ def card(c: dict[str, Any]) -> dict[str, Any]:
         "price": toman(c.get("price")),
         "shops": n if n is not None else (1 if text else None),
         "shop": clip(text.removeprefix("در "), 60) if text and n is None else None,
-        "condition": c.get("stock_status") or None,
+        "condition": condition,
         "ad": c.get("is_adv"),
         "local_seller": c.get("has_nearby_shop"),
         "badges": badges,
         "discount": c.get("discount_info"),
         "image": c.get("image_url") or None,
-        "url": product_url(prk) if prk else None,
     }
-    return slim(out, keep=("id", "name", "price", "url"))
+    return slim(out, keep=("id", "name", "price"))
+
+
+def dedupe(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """One card per product id: a sponsored copy of an organic card is merged into the first one (keeps `ad`)."""
+    seen: dict[str, dict[str, Any]] = {}
+    out = []
+    for r in rows:
+        if (kept := seen.get(r["id"])) is None:
+            seen[r["id"]] = r
+            out.append(r)
+        elif r.get("ad"):
+            kept["ad"] = True
+    return out
 
 
 def cards(items: object, limit: int | None = None) -> list[dict[str, Any]]:
-    rows = [card(c) for c in items or [] if isinstance(c, dict) and (c.get("random_key") or c.get("prk"))]
+    rows = dedupe([card(c) for c in items or [] if isinstance(c, dict) and (c.get("random_key") or c.get("prk"))])
     return rows[:limit] if limit else rows
 
 
@@ -85,7 +103,10 @@ def _installment(v: object) -> Any:
 
 
 def seller_row(r: dict[str, Any]) -> dict[str, Any]:
-    """One online seller offer of a product. `buyer_notes` are Torob's trust sentences (order volume, complaints)."""
+    """One online seller offer of a product. `buyer_notes` are Torob's trust sentences (order volume, complaints).
+
+    `in_stock` appears only when false. Shipping keeps free / cash on delivery / same-day (shipping types dropped).
+    """
     more = r.get("more_info") or {}
     info = (r.get("score_info") or {}).get("complaints_info") or {}
     price = toman(r.get("price"))
@@ -95,8 +116,7 @@ def seller_row(r: dict[str, Any]) -> dict[str, Any]:
         {
             "free": bool(more.get("free_shipping") or more.get("same_day_free_shipping")),
             "cod": bool(more.get("payment_on_delivery")),
-            "same_day": clip(more.get("same_day_delivery"), 80),
-            "types": [clip(t, 40) for t in more.get("shipping_types") or []],
+            "same_day": clip(more.get("same_day_delivery"), 50),
         }
     )
     out = {
@@ -104,7 +124,6 @@ def seller_row(r: dict[str, Any]) -> dict[str, Any]:
         "shop": clip(r.get("shop_name"), 60),
         "city": clip(r.get("shop_name2"), 40),
         "price": price,
-        "in_stock": r.get("availability", True),
         "unreliable": r.get("is_price_unreliable"),
         "score": r.get("shop_score"),
         "votes": r.get("shop_votes_count"),
@@ -113,11 +132,13 @@ def seller_row(r: dict[str, Any]) -> dict[str, Any]:
         "shipping": shipping,
         "updated": r.get("last_price_change_date"),
         "buyer_notes": [clip(s, 120) for s in info.get("summary") or [] if isinstance(s, str)],
-        "title": clip(r.get("name1"), 120),
-        "note": clip(r.get("name2"), 120),
-        "profile": r.get("has_public_torob_profile"),
+        "title": clip(r.get("name1"), 90),
+        "note": clip(r.get("name2"), 90),
     }
-    return slim(out, keep=("shop_id", "shop", "price", "in_stock", "score"))
+    out = slim(out, keep=("shop_id", "shop", "price", "score"))
+    if r.get("availability") is False:
+        out["in_stock"] = False  # stock is the normal case; only `in_stock: false` is shown
+    return out
 
 
 def store_row(r: dict[str, Any]) -> dict[str, Any]:
@@ -159,15 +180,15 @@ def usable(rows: list[dict[str, Any]], min_score: float = 0) -> list[dict[str, A
 
 
 def seller_stats(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """min / median / max over usable offers, the spread in percent of the min, and counts."""
+    """min / median / max over usable offers, the spread in percent of the min, and counts (zero counts omitted)."""
     ok = sorted(r["price"] for r in usable(rows))
-    out: dict[str, Any] = {
-        "offers": len(rows),
-        "usable": len(ok),
-        "unreliable": sum(1 for r in rows if r.get("unreliable")),
-        "installment": sum(1 for r in rows if r.get("installment")),
-        "torob_warranty": sum(1 for r in rows if r.get("torob_warranty")),
-    }
+    out: dict[str, Any] = {"offers": len(rows), "usable": len(ok)} | slim(
+        {
+            "unreliable": sum(1 for r in rows if r.get("unreliable")),
+            "installment": sum(1 for r in rows if r.get("installment")),
+            "torob_warranty": sum(1 for r in rows if r.get("torob_warranty")),
+        }
+    )
     if ok:
         out |= {
             "min": ok[0],

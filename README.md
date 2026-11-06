@@ -37,7 +37,7 @@ check the price history, judge a deal and find the cheapest shop for a whole sho
 - **Units:** prices in Toman (Torob's API is already Toman; nothing is converted). `price` is `null`, never 0, when there is no usable price.
 - **Use when:** the user wants the best Iranian shop price for a product, a price history, installment or warranty offers, or a pick within a budget.
 - **Do not use when:** the user wants to buy, or needs their own Torob account data (watchlist, alerts).
-- **Output:** compact JSON. The product `id` (a UUID) passes between tools.
+- **Output:** compact JSON. The product `id` (a UUID) passes between tools; links are `https://torob.com/p/<id>/` (not repeated on every card; `tb_product_url` and csv output still give them).
 - **Network:** talks to `api.torob.com` directly from your machine. After a bot-protection block (HTTP 490) it stops calling for 30 minutes and reports the minutes left; set `TOROB_MCP_PROXY` for another exit.
 - **Machine-readable:** [`server.json`](https://github.com/sepehr071/torob-mcp/blob/main/server.json) and the
   [iran-mcp catalog](https://github.com/sepehr071/iran-mcp) (`TOOLS.md`, `servers.json`, `llms.txt`).

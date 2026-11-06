@@ -171,6 +171,22 @@ async def test_requests_are_spaced(client, api, monkeypatch):
     assert len(waits) == 1 and 9 < waits[0] <= 10  # the second call waited for its slot
 
 
+async def test_jitter_is_skipped_only_for_a_lone_call(client, api, monkeypatch):
+    waits = []
+
+    async def fake_sleep(s):
+        waits.append(s)
+
+    monkeypatch.setattr(http, "JITTER", (1.5, 1.5))
+    monkeypatch.setattr(http.asyncio, "sleep", fake_sleep)
+    api["/v4/search-trends/"] = fixture("trends.json")
+    api["/v4/city/most-visited/list/"] = fixture("cities_top.json")
+    await client.call_tool("tb_trends", {})
+    assert waits == []  # nothing ran in the last 2 s
+    await client.call_tool("tb_cities", {})
+    assert waits == [1.5]  # right after another request: jitter kept
+
+
 async def test_browser_user_agent_and_no_env_proxy(client, api, monkeypatch):
     monkeypatch.setenv("HTTPS_PROXY", "http://127.0.0.1:1")  # must be ignored (trust_env=False)
     api["/suggestion2/"] = fixture("suggest.json")

@@ -26,11 +26,7 @@ async def test_tb_product(client, api):
     api[DETAILS] = fixture("details.json")
     out = await run(client, "tb_product", {"product": PRK})
     assert api.params()["prk"] == PRK
-    assert (
-        out["id"] == PRK
-        and out["name_en"].startswith("Apple iPhone 13 Pro")
-        and out["url"] == f"https://torob.com/p/{PRK}/"
-    )
+    assert out["id"] == PRK and out["name_en"].startswith("Apple iPhone 13 Pro") and "url" not in out
     assert out["price_min"] == 113_000_000 and out["price_max"] == 212_056_000 and out["shops"] == 11
     assert out["online_offers"] == 69 and out["in_person_stores"] == 22 and out["condition"] == "کارکرده"
     assert out["category"] == {"id": 94, "path": ["موبایل و کالای دیجیتال", "گوشی موبایل"]}
@@ -68,7 +64,7 @@ async def test_tb_sellers(client, api):
     assert p["prk"] == PRK and p["list_type"] == "products_info"
     assert [o["price"] for o in out["offers"]] == [113_000_000, 113_000_000, 117_810_000]
     assert out["stats"]["min"] == 113_000_000 and out["stats"]["median"] == 113_000_000 and out["stats"]["usable"] == 3
-    assert out["offers"][0]["buyer_notes"] and out["url"] == f"https://torob.com/p/{PRK}/"
+    assert out["offers"][0]["buyer_notes"] and "url" not in out
 
 
 async def test_sellers_filters_and_unreliable_hidden_by_default(client, api):
@@ -189,10 +185,10 @@ async def test_tb_price_history(client, api):
     api[CHART] = chart_with([100, 100, 90, 91, 120, 120])
     out = await run(client, "tb_price_history", {"product": PRK, "min_change_pct": 5})
     assert out["current"] == 120 and out["lowest"]["price"] == 90 and out["highest"]["price"] == 120
-    assert [e["kind"] for e in out["events"]] == ["rise", "drop"] and out["events"][0]["change_pct"] == 32
-    assert out["last_change"] == out["events"][0] and out["lowest"]["date"] == "2026-09-25"
+    assert [e["change_pct"] for e in out["events"]] == [32, -10]  # newest first; negative = drop
+    assert out["lowest"]["date"] == "2026-09-25"
     quiet = await run(client, "tb_price_history", {"product": PRK, "min_change_pct": 90})
-    assert quiet["events"] == [] and quiet["last_change"] is None
+    assert quiet["events"] == []
 
 
 async def test_tb_similar(client, api):
