@@ -65,6 +65,24 @@ uv run python -m pytest -m live -q    # one live test per tool, slow (requests a
   dict output. Add a unit test with a fixture, a live test, a README tool-table row, and an `INSTRUCTIONS` mention.
 - Keep `README.md` tool tables equal to `list_tools()` (a unit test checks it). Deps stay `mcp`, `httpx`, `httpx-curl-cffi`, `curl-cffi`; `patchright` only as the `browser` extra.
 - Write ZWNJ as `\u200c` in code, never the invisible character.
+- Web-like query (`http.SITE_PARAMS`): search, details and similar calls carry the torob.com web client's own params
+  (a per-run `suid` = 12 hex ms timestamp + 20 hex random, `init_suid`, `search_id`, `discover_method`, ...), and a
+  first-page search smaller than 24 is sent as `size=24` (the site's only page size) and trimmed by `_trim`. Torob
+  ignores these params; they only make calls look like the site. A param the tool sets itself wins.
+
+## Hosting on a VPS (live 2026-11-07)
+
+- Torob blocks by IP reputation, not by request shape: HTTP 490 even on the `torob.com` home page from Arvan (AS202468,
+  the `personal` box), the France VPS (OVH IP flagged as VPN) and Contabo (`alanchand`), often after letting the first
+  call through. `/suggestion2/` stays open. Fresh GitHub Actions runners (Azure) and the local Turkey exit pass, even with
+  plain curl first. Headers, TLS fingerprint and query params do not unblock a flagged IP.
+- What works on a blocked VPS: Cloudflare WARP as a userspace SOCKS5 proxy (`wgcf register && wgcf generate`, drop the
+  DNS/MTU lines, add `[Socks5] BindAddress = 127.0.0.1:40000`, run `wireproxy -c`), then
+  `TOROB_MCP_PROXY=socks5h://127.0.0.1:40000`. 21/21 calls passed from France. No code change: curl_cffi takes socks5h.
+- mcpfarsi prod runs torob-mcp on France this way (`mcpfarsi-warp.service`, see `../../mcp-farsi/CLAUDE.md`), with the
+  Paasta gateway (Iranian IP, also passes) as failover.
+- Testing a candidate egress: use the curl_cffi client (`uv run python` + `torob_mcp.http.api`) with a few calls a few
+  seconds apart, not a plain-curl loop. A single 200 proves nothing: blocked IPs often pass the first call.
 
 ## Verification status (read before trusting a shape)
 

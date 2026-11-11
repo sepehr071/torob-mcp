@@ -20,8 +20,8 @@ async def test_tb_search_basic(client, api):
     api[SEARCH] = fixture("search.json")
     out = await run(client, "tb_search", {"query": "iphone", "limit": 5})
     p = api.params()
-    assert p["q"] == "iphone" and p["query"] == "iphone" and p["size"] == "5" and p["page"] == "0" and p["sort"] == ""
-    assert p["source"] == "next_desktop"
+    assert p["q"] == "iphone" and p["query"] == "iphone" and p["size"] == "24" and p["page"] == "0" and p["sort"] == ""
+    assert p["source"] == "next_desktop" and p["suid"] == p["init_suid"] and len(p["suid"]) == 32  # like the site
     assert out["count"] == 1200 and out["count_capped"] is True and len(out["products"]) == 5
     assert out["products"][0]["price"] == 113_000_000 and out["products"][0]["shops"] == 11
     assert out["price_span"][1] > out["price_span"][0] and "next_page" not in out
@@ -72,7 +72,7 @@ async def test_brand_name_is_mapped_to_an_id(client, api):
     api[BRANDS] = fixture("brands.json")
     await run(client, "tb_search", {"category": 94, "brand": "Apple"})
     assert api.params()["brand"] == "14"
-    assert api.params(0)["size"] == "1"  # the probe
+    assert api.params(0)["size"] == "24"  # the probe, widened to the site's page size
     brand_calls = [c for c in api.calls if c.url.path == BRANDS]
     assert brand_calls[0].url.params["cat_list"] == "94"
     await run(client, "tb_search", {"category": 94, "brand": "سامسونگ"})

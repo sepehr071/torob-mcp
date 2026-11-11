@@ -1,3 +1,4 @@
+import asyncio
 import json
 import re
 from pathlib import Path
@@ -342,3 +343,23 @@ async def test_queued_callers_reuse_a_fresh_clearance_and_launch_no_second_brows
     api["/v4/a/"] = api["/v4/b/"] = ok
     await asyncio.gather(http.api("/v4/a/"), http.api("/v4/b/"))
     assert len(launches) == 1
+
+
+async def test_a_long_request_queue_fails_fast_without_sending(client, api, monkeypatch):
+    monkeypatch.setattr(http, "MIN_INTERVAL", 2)
+    http._next_slot = http._now() + 30  # other calls hold the next 30 s of slots
+    api["/v4/search-trends/"] = fixture("trends.json")
+    result = await client.call_tool("tb_trends", {})
+    assert result.is_error and "Ran out of time" in result.content[0].text and api.calls == []
+    assert http._next_slot - http._now() < 31  # the refused call took no slot
+
+
+async def test_a_call_that_outlives_the_budget_gets_a_clear_error(client, monkeypatch):
+    async def slow(request):
+        await asyncio.sleep(5)
+        return httpx.Response(200, json={})
+
+    monkeypatch.setattr(http, "CALL_BUDGET", 0.2)
+    http.set_transport(httpx.MockTransport(slow))
+    result = await client.call_tool("tb_trends", {})
+    assert result.is_error and "did not answer within 0.2 s" in result.content[0].text

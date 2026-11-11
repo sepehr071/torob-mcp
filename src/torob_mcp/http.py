@@ -5,7 +5,8 @@ No token or header is needed. Every tool goes through `api`. `_send` spaces requ
 small TTL cache, retries once on dropped connections and 502/503/504, and turns failures into `ToolError` messages
 the model can act on.
 
-Requests look like one Chrome user: curl_cffi sends Chrome's TLS/HTTP2 fingerprint and default headers.
+Requests look like one Chrome user: curl_cffi sends Chrome's TLS/HTTP2 fingerprint and default headers, and the
+query carries the web client's own params (`SITE_PARAMS`, a per-run `suid`, first-page searches sized 24).
 
 Torob's WAF answers HTTP 490 (an ArCaptcha page) when an IP sends a burst of requests. A challenge is met in order
 with: the next proxy of `TOROB_MCP_PROXY` (a comma-separated pool), then one headless patchright visit of the home
@@ -16,6 +17,7 @@ call starts a cooldown (`COOLDOWN` seconds) during which every call fails at onc
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import json
 import os
 import random
@@ -59,9 +61,32 @@ RETRY_STATUS = (429, 502, 503, 504)
 BROWSER = os.environ.get("TOROB_MCP_BROWSER", "1") != "0"  # rung 2 switch (tests turn it off)
 BROWSER_WAIT = 20  # seconds the headless browser waits for the challenge to clear
 CACHE_MAX = 256
+# Hosted routers cut a tool call at 20 s: a whole call gets CALL_BUDGET seconds (server.compact), each upstream attempt
+# REQUEST_TIMEOUT, so a stalled request still leaves room for one retry and the caller gets a clear message, not a hang.
+CALL_BUDGET = 15.0
+# curl_cffi (stream mode) gives up after connect + read = 9 s without any data; a slow but flowing body is not cut
+REQUEST_TIMEOUT = httpx.Timeout(5, connect=4)
 # cache lifetime in seconds by path prefix; the first match wins, DEFAULT_TTL otherwise
 TTLS = (("/v4/base-product/price-chart/", 6 * 3600), ("/v4/base-product/details/", 900), ("/v4/city/", 3600))
 DEFAULT_TTL = 300
+PAGE_SIZE = 24  # the site always asks for 24 cards; smaller first-page searches are sent as 24 and trimmed here
+SESSION = f"{int(time.time() * 1000):012x}{os.urandom(10).hex()}"  # the web client's suid shape, one per run
+# params the torob.com web client sends on these paths (seen in its traffic); Torob ignores them, they make calls
+# look like the site. A param the tool already set wins.
+SITE_PARAMS: dict[str, dict[str, Any]] = {
+    "/v4/base-product/search/": {"suid": SESSION, "init_suid": SESSION},
+    "/v4/base-product/details/": {
+        "discover_method": "search",
+        "_bt__experiment": "",
+        "suid": SESSION,
+        "search_id": SESSION,
+        "cities": "",
+        "province": "",
+        "init_suid": SESSION,
+        "rank": 0,
+    },
+    "/v4/base-product/similar-base-product/": {"init_suid": SESSION},
+}
 
 _transport: httpx.AsyncBaseTransport | None = None
 _client: httpx.AsyncClient | None = None
@@ -74,6 +99,7 @@ _blocked_until = 0.0
 _next_slot = 0.0
 _last_sent = -1e9  # when the last upstream request finished (or failed)
 _cleared_at = -1e9  # when a browser last got cookies; callers queued on the lock reuse them
+_deadline: contextvars.ContextVar[float] = contextvars.ContextVar("torob_deadline", default=float("inf"))
 RECENT_CLEAR = 30  # seconds
 
 
@@ -92,6 +118,15 @@ class _CurlTransport(AsyncCurlTransport):
 
 class Blocked(ApiError):
     """Torob's bot protection (HTTP 490) is refusing this IP."""
+
+
+class OutOfTime(ApiError):
+    """The call's time budget would run out while waiting for a request slot (nothing was sent)."""
+
+
+def start_call() -> None:
+    """Start the CALL_BUDGET clock for the current tool call (a contextvar: concurrent calls keep their own)."""
+    _deadline.set(_now() + CALL_BUDGET)
 
 
 def _now() -> float:
@@ -149,7 +184,7 @@ def _get_client() -> tuple[httpx.AsyncClient, asyncio.Semaphore]:
                 max_connections=2 * MAX_CONCURRENCY,
             ),
             headers=HEADERS,
-            timeout=30,
+            timeout=REQUEST_TIMEOUT,
             follow_redirects=False,  # the API never redirects; do not follow one to another host
             trust_env=False,
         )
@@ -249,15 +284,28 @@ async def api(
     """
     global _blocked_until, _next_slot
     query = {k: (str(v).lower() if isinstance(v, bool) else v) for k, v in (params or {}).items() if v is not None}
+    query |= {k: v for k, v in SITE_PARAMS.get(path, {}).items() if k not in query}
+    want = None
+    if (
+        path == "/v4/base-product/search/"
+        and query.get("page") == 0
+        and int(query.get("size") or PAGE_SIZE) < PAGE_SIZE
+    ):
+        want, query["size"] = int(query["size"]), PAGE_SIZE
     key = f"{path}?{json.dumps(query, sort_keys=True, ensure_ascii=False)}#{city}"
     hit = _cache.get(key)
     if hit and hit[0] > _now():
-        return hit[1]
+        return _trim(hit[1], want)
     if guard and (left := _cooldown_left()):
         raise Blocked(_blocked_message(left))
     if guard and MIN_INTERVAL > 0:
         now = _now()
         wait = _next_slot - now
+        if now + max(wait, 0) + 2 > _deadline.get():  # ~2 s for the request itself; the slot is not taken
+            raise OutOfTime(
+                f"Ran out of time: Torob requests are spaced {MIN_INTERVAL:g} s apart and {max(wait, 0):.0f} s of them "
+                "are already queued (other calls are running). Try again in a few seconds, or ask for fewer items."
+            )
         _next_slot = max(now, _next_slot) + MIN_INTERVAL
         if wait > 0:
             await asyncio.sleep(wait)
@@ -290,7 +338,14 @@ async def api(
     if len(_cache) >= CACHE_MAX:
         _cache.pop(next(iter(_cache)))
     _cache[key] = (_now() + _ttl(path), data)
-    return data
+    return _trim(data, want)
+
+
+def _trim(data: Any, want: int | None) -> Any:
+    """Cut a widened search reply back to the size the tool asked for (a copy: cached bodies are never mutated)."""
+    if want is None or not isinstance(data, dict) or not isinstance(data.get("results"), list):
+        return data
+    return {**data, "results": data["results"][:want]}
 
 
 async def _send(

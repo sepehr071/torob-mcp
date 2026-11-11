@@ -162,3 +162,22 @@ async def test_tb_basket_accepts_ids_reports_unresolved_and_no_common_shop(clien
     assert out["unresolved"] == ["ناشناخته"] and out["single_shop"] == [] and "No single shop" in out["note"]
     assert out["split_cart"]["total"] == 150
     assert (await client.call_tool("tb_basket", {"items": ["one"]})).is_error
+
+
+async def test_tb_cheapest_returns_the_matches_checked_before_time_ran_out(client, api, monkeypatch):
+    from torob_mcp import decide, http
+
+    real, seen = decide.offers, []
+
+    async def offers(prk, city=None):
+        seen.append(prk)
+        if len(seen) > 1:
+            raise http.OutOfTime("Ran out of time")
+        return await real(prk, city)
+
+    monkeypatch.setattr(decide, "offers", offers)
+    api[SEARCH] = fixture("search.json")
+    api[SELLERS] = fixture("sellers.json")
+    out = await run(client, "tb_cheapest", {"query": "iphone 13 pro", "candidates": 3})
+    assert len(out["picks"]) == 1 and out["partial"] == "Checked 1 of 3 matches before the time limit."
+    assert out["cheapest"]["product"]["id"] == PRK

@@ -1,5 +1,6 @@
 """MCP server entry point: registers every read-only Torob tool."""
 
+import asyncio
 import functools
 import inspect
 import json
@@ -8,7 +9,7 @@ import logging
 from mcp.server import MCPServer
 from mcp.types import ToolAnnotations
 
-from . import __version__, decide, product, search, shops  # noqa: F401  (imports register the tools)
+from . import __version__, decide, http, product, search, shops  # noqa: F401  (imports register the tools)
 from .registry import TOOLS
 
 INSTRUCTIONS = """\
@@ -43,11 +44,26 @@ mcp = MCPServer(
 
 
 def compact(fn):
-    """Return the tool result as one compact JSON text block (the SDK default sends it twice, indented)."""
+    """Return the tool result as one compact JSON text block (the SDK default sends it twice, indented).
+
+    The whole call gets http.CALL_BUDGET seconds, then fails with a clear message instead of hanging.
+    """
 
     @functools.wraps(fn)
     async def run(*args, **kwargs):
-        return json.dumps(await fn(*args, **kwargs), ensure_ascii=False, separators=(",", ":"))
+        http.start_call()
+        task = asyncio.ensure_future(fn(*args, **kwargs))
+        try:
+            done, _ = await asyncio.wait({task}, timeout=http.CALL_BUDGET)
+        finally:
+            task.cancel()  # not awaited, so a stuck socket cannot hold back the answer; no more requests after it
+        if not done:
+            raise http.ApiError(
+                f"torob.com did not answer within {http.CALL_BUDGET:g} s (slow network or busy). Try again in a moment; "
+                "fewer items per call are faster."
+            )
+        out = task.result()
+        return json.dumps(out, ensure_ascii=False, separators=(",", ":"))
 
     return run
 

@@ -8,7 +8,7 @@ from pydantic import Field
 
 from .cards import UUID_RE, card, dedupe, product_url, seller_stats, slim, usable
 from .fa import norm
-from .http import ApiError, Blocked, api
+from .http import ApiError, Blocked, OutOfTime, api
 from .product import City, Ref, chart_data, chart_summary, details, offers, prk_of, series_of, spec_map, summary
 from .registry import tool
 from .search import SORTS, SOURCE
@@ -57,7 +57,12 @@ async def tb_cheapest(
         raise ApiError(f"No priced product found for '{query}'. Try tb_suggest for wording.")
     picks = []
     for c in found:
-        rows = await offers(c["id"], city)
+        try:
+            rows = await offers(c["id"], city)
+        except OutOfTime:
+            if not picks:
+                raise
+            break  # partial: the matches checked so far
         ok = _pick(rows, installment_only, min_score)
         picks.append(
             {
@@ -68,6 +73,8 @@ async def tb_cheapest(
         )
     priced = [p for p in picks if p["best_offer"]]
     out: dict[str, Any] = {"query": query, "picks": picks}
+    if len(picks) < len(found):
+        out["partial"] = f"Checked {len(picks)} of {len(found)} matches before the time limit."
     if priced:
         best = min(priced, key=lambda p: p["best_offer"]["price"])
         offer = best["best_offer"]  # the full row is already in `picks`
