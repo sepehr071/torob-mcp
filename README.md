@@ -24,7 +24,7 @@ check the price history, judge a deal and find the cheapest shop for a whole sho
 
 ---
 
-> **Status: new.** The live test suite passes against torob.com (checked 2026-10-18). Some endpoints are still mapped from the web app's code only, and several offline test fixtures are hand-made rather than recorded.
+> **Status: new.** The live test suite passes against torob.com (checked 2026-10-18). Some endpoints are not yet covered by live tests, and several offline test fixtures are hand-made rather than recorded.
 
 ## For AI agents
 
@@ -223,7 +223,7 @@ All 26 tools are annotated `readOnlyHint: true` and return compact JSON, so they
 
 - **Prices are Toman.** Torob's API already returns Toman (checked against the display text in every test); nothing is converted. `price` is `null` when there is no usable price, never 0.
 - **A card's price is the cheapest across shops** and can be an out-of-stock or unreliable offer. For a real buying price use `tb_sellers` or `tb_cheapest`, which skip offers flagged `unreliable`.
-- **Torob's bot protection.** Torob's firewall answers HTTP 490 (a captcha page) when one IP sends a burst of requests, and then keeps blocking that IP for an hour or more. This server presents itself as Chrome (TLS and HTTP/2 fingerprint, headers), makes one call at a time with a pause between calls (2 s plus 0.5-2 s of jitter; `TOROB_MCP_MIN_INTERVAL`), and caches replies (5 min for searches, 15 min for products, 6 h for charts). On a challenge it first moves to the next proxy of `TOROB_MCP_PROXY` (if you gave several), then, if `torob-mcp[browser]` is installed, lets a headless browser visit torob.com once and reuses its cookies. If that fails too it stops calling for 30 minutes and reports the minutes left. It does not solve CAPTCHAs. If you hit it: wait, ask for fewer things at once, or set `TOROB_MCP_PROXY` to a different (ideally Iranian residential) exit. `tb_suggest` is not covered by that limit.
+- **Torob's bot protection.** Torob's firewall answers HTTP 490 (a captcha page) when one IP sends a burst of requests, and then keeps blocking that IP for an hour or more. This server makes one call at a time with a pause between calls (2 s plus 0.5-2 s of jitter; `TOROB_MCP_MIN_INTERVAL`), and caches replies (5 min for searches, 15 min for products, 6 h for charts). On a challenge it first moves to the next proxy of `TOROB_MCP_PROXY` (if you gave several), then, if `torob-mcp[browser]` is installed, retries once through a headless browser. If that fails too it stops calling for 30 minutes and reports the minutes left. It does not solve CAPTCHAs. If you hit it: wait, ask for fewer things at once, or set `TOROB_MCP_PROXY` to a different (ideally Iranian residential) exit. `tb_suggest` is not covered by that limit.
 - **Silent filters.** Torob ignores unknown parameters without an error. Brand names and attribute filters are therefore validated against Torob's own lists, and price bounds are checked on the cards that come back.
 - **Counts stop at 1200** (`count_capped`).
 - **Derived tools.** `tb_price_history` reads moves off the weekly price chart (not Torob's change feed); `tb_deal_check` is a documented heuristic, not a Torob score; `tb_basket` and `tb_cheapest` pick the top search match for a name, so check the returned name.
@@ -266,7 +266,7 @@ never tries to solve CAPTCHAs.
 <details>
 <summary><b>Do I need an Iranian IP?</b></summary>
 
-Not always: the live tests passed from a Chrome-like client without one (checked 2026-10-18). Torob blocks many
+Not always: the live tests passed without one (checked 2026-10-18). Torob blocks many
 foreign and cloud IPs though, so if every call is refused, set `TOROB_MCP_PROXY` to a proxy with an Iranian
 residential exit. Normal system proxy variables are ignored on purpose.
 </details>
